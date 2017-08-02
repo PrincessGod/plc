@@ -1,10 +1,8 @@
 define(['Cesium'], function(Cesium) {
     'use strict';
-    /*global self*/
-    var scope = typeof window !== 'undefined' ? window : typeof self !== 'undefined' ? self : {};
-    
-    scope.Cesium = Cesium;
-    
+	//>>includeStart('debug', pragmas.debug);
+	console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Almond Debug Test >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+	//>>includeEnd('debug');
     console.log(Cesium);
     return Cesium;
 });
