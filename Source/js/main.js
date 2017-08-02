@@ -2,12 +2,15 @@ var developMode = false;
 
 if (developMode) {
     require.config({
-    	baseUrl: '../../Cesium/Source'
+        baseUrl: '../../Thirdparty/Cesium/Source',
+        paths: {
+            'plcjs': '../../../Source/js'
+        }
     });
 } else {
     require.config({
         paths: {
-            'Cesium': '../../Cesium/Build/Cesium/Cesium'
+            'Cesium': '../../Build/Cesium/Cesium'
         },
         shim: {
             Cesium: {
@@ -20,5 +23,5 @@ if (developMode) {
 if (typeof Cesium !== "undefined") {
     onload(Cesium);
 } else if (typeof require === "function") {
-    require(["Cesium"], onload);
+    require(["plcjs/test"], onload);
 }
