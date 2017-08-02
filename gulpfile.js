@@ -21,7 +21,6 @@ gulp.task('copyFiles', ['delFiles'], function() {
         .pipe(gulp.dest('./Build/Cesium'));
 });
 
-gulp.
 //
 // Default Task
 //
