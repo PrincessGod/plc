@@ -8,24 +8,32 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <!-- Make the application on mobile take up the full browser screen and disable user scaling. -->
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <script type="text/javascript" src="./Build/Cesium/plc.js"></script>
     <title>Hello World!</title>
-    <style type="text/css">
-    a {
-        color: #aaa;
-    }
-
-    ul {
-        list-style-type: none;
+    <style>
+    @import url(./Build/Cesium/Widgets/widgets.css);
+    html,
+    body,
+    #cesiumContainer {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
     }
     </style>
 </head>
 
-<body style="background: #333; color: aaa">
-    <ul>
-        <li><a href="Indexes/IndexDev.html">Dev</a></li>
-        <li><a href="Indexes/IndexCombine.html">Combine</a></li>
-        <li><a href="Indexes/IndexRelease.html">Release</a></li>
-    </ul>
+<body style="background: #333">
+    <div style="display: table; position: fixed; width: 100%; height: 100%; border: none; color: white; text-align: center;"><span style="display: table-cell; vertical-align: middle; font-size: 18px; color: #aaa">Loading...</span></div>
+    <div id="cesiumContainer"></div>
+    <script>
+    function onload() {
+        var viewer = new Cesium.Viewer('cesiumContainer');
+        console.log(Cesium);
+    }
+    onload();
+    </script>
 </body>
 
 </html>

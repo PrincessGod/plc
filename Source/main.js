@@ -9,10 +9,10 @@ require([
     /*global self*/
     var scope = typeof window !== 'undefined' ? window : typeof self !== 'undefined' ? self : {};
     scope.Cesium = test;
-    scope.CESIUM_BASE_URL = '../Build/Cesium';
+    scope.CESIUM_BASE_URL = './Build/Cesium';
 
     //>>includeStart('combinePath', pragmas.combinePath);
-    scope.CESIUM_BASE_URL = '../Build/CesiumUnminified';
+    scope.CESIUM_BASE_URL = './Build/CesiumUnminified';
     //>>includeEnd('combinePath');
 
 }, undefined, true);

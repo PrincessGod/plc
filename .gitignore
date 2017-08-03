@@ -1,1 +1,7 @@
 /node_modules
+/Indexes
+/Source
+/Thirdparty
+
+gulpfile.js
+package.json
