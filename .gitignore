@@ -1,7 +1,7 @@
 /node_modules
 /Indexes
 /Source
-/Thirdparty
+/ThirdParty
 
 gulpfile.js
 package.json
