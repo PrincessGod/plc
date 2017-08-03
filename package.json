@@ -25,6 +25,7 @@
   "homepage": "https://github.com/PrincessGod/plc#readme",
   "devDependencies": {
     "almond": "^0.3.3",
+    "bluebird": "^3.5.0",
     "del": "^3.0.0",
     "globby": "^6.1.0",
     "gulp": "^3.9.1",

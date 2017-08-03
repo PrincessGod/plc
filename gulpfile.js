@@ -20,40 +20,77 @@ const concurrency = Math.min(os.cpus().length, 8);
 //
 // Command Tasks
 //
-gulp.task('delFiles', function(cb) {
+gulp.task('delMinify', function(cb) {
     del(path.join('Build', 'Cesium')).then(paths => {
         console.log('Deleted files and folders:\n', paths.join('\n'));
         cb();
     });
 })
 
-gulp.task('copyFiles', ['delFiles'], function() {
+gulp.task('delCombine', function(cb) {
+    del(path.join('Build', 'CesiumUnminified')).then(paths => {
+        console.log('Deleted files and folders:\n', paths.join('\n'));
+        cb();
+    });
+})
+
+gulp.task('copyOrigin', ['delMinify'], function() {
     gulp.src('./Thirdparty/Cesium/Build/Cesium/**')
         .pipe(gulp.dest(path.join('Build', 'Cesium')));
 });
 
-gulp.task('requirejs', function(cb) {
+gulp.task('requirejs', function(done) {
     var config = JSON.parse(new Buffer(process.argv[3].substring(2), 'base64').toString('utf8'));
     requirejs.optimize(config, function() {
-        cb();
-    }, cb);
+        done();
+    }, done);
 });
 
-gulp.task('combine', function() {
+gulp.task('combine', ['delCombine'], function() {
     var outputDirectory = path.join('Build', 'CesiumUnminified');
     return combineJavaScript({
-        removePragmas : false,
-        optimizer : 'none',
-        outputDirectory : outputDirectory
+        removePragmas: false,
+        useCombine: true,
+        optimizer: 'none',
+        outputDirectory: outputDirectory
     });
 });
+
+gulp.task('combineRelease', ['delCombine'], function() {
+    var outputDirectory = path.join('Build', 'CesiumUnminified');
+    return combineJavaScript({
+        removePragmas: true,
+        useCombine: true,
+        optimizer: 'none',
+        outputDirectory: outputDirectory
+    });
+});
+
+gulp.task('minify', ['delMinify'], function() {
+    return combineJavaScript({
+        removePragmas: false,
+        useCombine: false,
+        optimizer: 'uglify2',
+        outputDirectory: path.join('Build', 'Cesium')
+    });
+});
+
+gulp.task('minifyRelease', ['delMinify'], function() {
+    return combineJavaScript({
+        removePragmas: true,
+        useCombine: false,
+        optimizer: 'uglify2',
+        outputDirectory: path.join('Build', 'Cesium')
+    });
+});
+
 //
 // Default Task
 //
-gulp.task('default', ['copyFiles','delFiles']);
+//gulp.task('default', ['copyFiles','delFiles']);
 
 //
-// Util Functions
+// Utility Functions
 //
 function requirejsOptimize(name, config) {
     console.log('Building ' + name);
@@ -75,12 +112,13 @@ function combineJavaScript(options) {
     var optimizer = options.optimizer;
     var outputDirectory = options.outputDirectory;
     var removePragmas = options.removePragmas;
+    var useCombinePath = options.useCombine;
 
     var combineOutput = path.join('Build', 'combineOutput', optimizer);
     var copyrightHeader = fs.readFileSync(path.join('Source', 'copyrightHeader.js'));
 
     var promise = Promise.join(
-        combinePlc(!removePragmas, optimizer, combineOutput),
+        combinePlc(!removePragmas, useCombinePath, optimizer, combineOutput),
         combineWorkers(!removePragmas, optimizer, combineOutput)
     );
 
@@ -89,7 +127,7 @@ function combineJavaScript(options) {
 
         //copy to build folder with copyright header added at the top
         var stream = gulp.src([combineOutput + '/**'])
-            .pipe(gulpInsert.prepend(copyrightHeader))
+            //.pipe(gulpInsert.prepend(copyrightHeader))
             .pipe(gulp.dest(outputDirectory));
 
         promises.push(streamToPromise(stream));
@@ -101,29 +139,38 @@ function combineJavaScript(options) {
             everythingElse.push('!**/*.css');
         }
 
-        stream = gulp.src(everythingElse, {nodir : true}).pipe(gulp.dest(outputDirectory));
+        stream = gulp.src(everythingElse, { nodir: true }).pipe(gulp.dest(outputDirectory));
         promises.push(streamToPromise(stream));
 
         return Promise.all(promises).then(function() {
-            rimraf.sync(combineOutput);
+            del(path.join('Build', 'combineOutput'));
         });
     });
 }
 
-function combinePlc(debug, optimizer, combineOutput) {
-    return requirejsOptimize('Cesium.js', {
-        wrap : true,
-        useStrict : true,
-        optimize : optimizer,
-        optimizeCss : 'standard',
-        pragmas : {
-            debug : debug
+function combinePlc(debug, useCombine, optimizer, combineOutput) {
+    var keepLicense = true;
+
+    if (optimizer === 'uglify2') {
+        keepLicense = false;
+        console.log('keepLicense : false');
+    }
+
+    return requirejsOptimize('plc.js', {
+        wrap: true,
+        useStrict: true,
+        optimize: optimizer,
+        optimizeCss: 'standard',
+        preserveLicenseComments: keepLicense,
+        pragmas: {
+            debug: debug,
+            combinePath: useCombine
         },
-        baseUrl : 'Source',
-        skipModuleInsertion : true,
-        name : removeExtension(path.relative('Source', require.resolve('almond'))),
-        include : 'main',
-        out : path.join(combineOutput, 'Cesium.js')
+        baseUrl: 'Source',
+        skipModuleInsertion: true,
+        name: removeExtension(path.relative('Source', require.resolve('almond'))),
+        include: 'main',
+        out: path.join(combineOutput, 'plc.js')
     });
 }
 
@@ -138,47 +185,49 @@ function removeExtension(p) {
 function combineWorkers(debug, optimizer, combineOutput) {
     //This is done waterfall style for concurrency reasons.
     return globby(['Source/Workers/cesiumWorkerBootstrapper.js',
-                   'Source/Workers/transferTypedArrayTest.js',
-                   'Source/ThirdParty/Workers/*.js'])
+            'Source/Workers/transferTypedArrayTest.js',
+            'Source/ThirdParty/Workers/*.js'
+        ])
         .then(function(files) {
             return Promise.map(files, function(file) {
                 return requirejsOptimize(file, {
-                    wrap : false,
-                    useStrict : true,
-                    optimize : optimizer,
-                    optimizeCss : 'standard',
-                    pragmas : {
-                        debug : debug
+                    wrap: false,
+                    useStrict: true,
+                    optimize: optimizer,
+                    optimizeCss: 'standard',
+                    pragmas: {
+                        debug: debug,
                     },
-                    baseUrl : 'Source',
-                    skipModuleInsertion : true,
-                    include : filePathToModuleId(path.relative('Source', file)),
-                    out : path.join(combineOutput, path.relative('Source', file))
+                    baseUrl: 'Source',
+                    skipModuleInsertion: true,
+                    include: filePathToModuleId(path.relative('Source', file)),
+                    out: path.join(combineOutput, path.relative('Source', file))
                 });
-            }, {concurrency : concurrency});
+            }, { concurrency: concurrency });
         })
         .then(function() {
             return globby(['Source/Workers/*.js',
-                           '!Source/Workers/cesiumWorkerBootstrapper.js',
-                           '!Source/Workers/transferTypedArrayTest.js',
-                           '!Source/Workers/createTaskProcessorWorker.js',
-                           '!Source/ThirdParty/Workers/*.js']);
+                '!Source/Workers/cesiumWorkerBootstrapper.js',
+                '!Source/Workers/transferTypedArrayTest.js',
+                '!Source/Workers/createTaskProcessorWorker.js',
+                '!Source/ThirdParty/Workers/*.js'
+            ]);
         })
         .then(function(files) {
             return Promise.map(files, function(file) {
                 return requirejsOptimize(file, {
-                    wrap : true,
-                    useStrict : true,
-                    optimize : optimizer,
-                    optimizeCss : 'standard',
-                    pragmas : {
-                        debug : debug
+                    wrap: true,
+                    useStrict: true,
+                    optimize: optimizer,
+                    optimizeCss: 'standard',
+                    pragmas: {
+                        debug: debug
                     },
-                    baseUrl : 'Source',
-                    include : filePathToModuleId(path.relative('Source', file)),
-                    out : path.join(combineOutput, path.relative('Source', file))
+                    baseUrl: 'Source',
+                    include: filePathToModuleId(path.relative('Source', file)),
+                    out: path.join(combineOutput, path.relative('Source', file))
                 });
-            }, {concurrency : concurrency});
+            }, { concurrency: concurrency });
         });
 }
 
@@ -186,16 +235,16 @@ function minifyCSS(outputDirectory) {
     return globby('Source/**/*.css').then(function(files) {
         return Promise.map(files, function(file) {
             return requirejsOptimize(file, {
-                wrap : true,
-                useStrict : true,
-                optimizeCss : 'standard',
-                pragmas : {
-                    debug : true
+                wrap: true,
+                useStrict: true,
+                optimizeCss: 'standard',
+                pragmas: {
+                    debug: true
                 },
-                cssIn : file,
-                out : path.join(outputDirectory, path.relative('Source', file))
+                cssIn: file,
+                out: path.join(outputDirectory, path.relative('Source', file))
             });
-        }, {concurrency : concurrency});
+        }, { concurrency: concurrency });
     });
 }
 
