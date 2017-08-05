@@ -4,14 +4,16 @@ define([
     '../../Core/DeveloperError',
     '../../ThirdParty/knockout',
     '../../Widgets/createCommand',
-    '../../Core/destroyObject'
+    '../../Core/destroyObject',
+    '../../Scene/SceneMode'
 ], function(
     defined,
     defineProperties,
     DeveloperError,
     knockout,
     createCommand,
-    destroyObject) {
+    destroyObject,
+    SceneMode) {
     'use strict';
 
     function CompassButtonViewModel(scene, duration) {
@@ -27,15 +29,17 @@ define([
 
         var that = this;
         this._command = createCommand(function() {
-            that._scene.camera.flyTo({
-                destination: that._scene.camera.position,
-                duration: that._duration,
-                orientation: {
-                    heading: 0,
-                    pitch: that._scene.camera.pitch,
-                    roll: that._scene.camera.roll
-                }
-            });
+            if (that._scene.mode === SceneMode.SCENE3D) {
+                that._scene.camera.flyTo({
+                    destination: that._scene.camera.position,
+                    duration: that._duration,
+                    orientation: {
+                        heading: 0,
+                        pitch: that._scene.camera.pitch,
+                        roll: that._scene.camera.roll
+                    }
+                });
+            }
         });
 
 

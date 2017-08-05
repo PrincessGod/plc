@@ -38,7 +38,7 @@
     <div id="toolbar"></div>
     <script>
     function onload(Cesium) {
-        var viewer = new Cesium.Viewer('cesiumContainer');
+        this.viewer = new Cesium.Viewer('cesiumContainer');
         this.Cesium = Cesium;
         var compass = Cesium.PLC.CompassButton(viewer._toolbar, viewer.scene);
     }
