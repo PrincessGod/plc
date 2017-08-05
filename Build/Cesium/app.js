@@ -25,4 +25,6 @@
             terrainProvider: new Cesium.EllipsoidTerrainProvider(),
             sceneMode: Cesium.SceneMode.SCENE3D // Cesium.SceneMode.SCENE2D Cesium.SceneMode.COLUMBUS_VIEW
         });
+
+        var compass = Cesium.PLC.CompassButton(viewer._toolbar, viewer.scene);
     });
