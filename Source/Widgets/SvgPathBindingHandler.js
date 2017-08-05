@@ -32,9 +32,9 @@ define(function() {
      * <div data-bind="cesiumSvgPath: svgPathOptions"></div>
      */
     var SvgPathBindingHandler = {
-        register : function(knockout) {
+        register: function(knockout) {
             knockout.bindingHandlers.cesiumSvgPath = {
-                init : function(element, valueAccessor) {
+                init: function(element, valueAccessor) {
                     var svg = document.createElementNS(svgNS, 'svg:svg');
                     svg.setAttribute('class', svgClassName);
 
@@ -44,7 +44,7 @@ define(function() {
                     knockout.virtualElements.setDomNodeChildren(element, [svg]);
 
                     knockout.computed({
-                        read : function() {
+                        read: function() {
                             var value = knockout.unwrap(valueAccessor());
 
                             pathElement.setAttribute('d', knockout.unwrap(value.path));
@@ -59,12 +59,25 @@ define(function() {
                             if (value.css) {
                                 svg.setAttribute('class', svgClassName + ' ' + knockout.unwrap(value.css));
                             }
+
+                            if (value.style) {
+                                var styleUnwarp = knockout.unwrap(value.style);
+                                var style = '';
+
+                                for (var property in styleUnwarp) {
+                                    if (styleUnwarp.hasOwnProperty(property)) {
+                                        style += property + ':' + styleUnwarp[property] + ';';
+                                    }
+                                }
+
+                                svg.setAttribute('style', style);
+                            }
                         },
-                        disposeWhenNodeIsRemoved : element
+                        disposeWhenNodeIsRemoved: element
                     });
 
                     return {
-                        controlsDescendantBindings : true
+                        controlsDescendantBindings: true
                     };
                 }
             };

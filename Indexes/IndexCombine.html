@@ -30,7 +30,7 @@
     <script>
     function onload() {
         var viewer = new Cesium.Viewer('cesiumContainer');
-        console.log(Cesium);
+        var compass = Cesium.PLC.CompassButton(viewer._toolbar, viewer.scene);
     }
     onload();
     </script>
