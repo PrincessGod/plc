@@ -38,7 +38,7 @@ define([
         element.setAttribute('data-bind', '\
 attr: { title: tooltip },\
 click: command,\
-cesiumSvgPath: { path: _svgPath, width: 28, height: 28, style:{transform: headingStyle, "-ms-transform": headingStyle, "-webkit-transform": headingStyle}}');
+cesiumSvgPath: { path: _svgPath, width: 28, height: 28, style:{transform: headingStyle, "-ms-transform": headingStyle, "-webkit-transform": headingStyle, width: "86%", left: "2px"}}');
         container.appendChild(element);
         knockout.applyBindings(viewModel, element);
 
