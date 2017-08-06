@@ -1,3 +1,7 @@
+    requirejs.config({
+        waitSeconds: 100,
+    });
+
     require(['plc'], function() {
         'user strict';
 
