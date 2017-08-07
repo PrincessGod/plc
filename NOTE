@@ -1,0 +1,24 @@
+Build
+	gulp
+	requirejs almond
+	del rimraf
+	bludbird
+	globby
+	gulp-insert
+
+Maintaining
+	dev
+		Apps
+		Source
+		Indexes
+	combine
+		Apps
+		Source
+		Build/CesiumUnminified
+	release
+		Build/Cesium
+
+View
+	Konkout
+	Backbone
+	Dojo
