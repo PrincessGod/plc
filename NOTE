@@ -22,3 +22,6 @@ View
 	Konkout
 	Backbone
 	Dojo
+
+Modify Source
+	Widgets/SvgPathBindingHandler.js -add stylebinding : L63 - L74
