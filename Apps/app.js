@@ -18,20 +18,21 @@
             creditContainer: document.createElement('DIV'),
 
             // Display
-            imageryProvider : new Cesium.WebMapTileServiceImageryProvider({
-                url : 'http://t0.tianditu.com/vec_c/wmts?',
-                layer : 'vec',
-                style : 'default',
-                format : 'tiles',
-                tileMatrixSetID : 'c',
-                tilingScheme : new Cesium.GeographicTilingScheme(),
-                credit : new Cesium.Credit('天地图矢量地图'),
-                maximumLevel : 17,
-                tileMatrixLabels:['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19']
+            imageryProvider: Cesium.createTileMapServiceImageryProvider({
+                url: Cesium.buildModuleUrl('Assets/Textures/NaturalEarthII')
             }),
             terrainProviderViewModels: undefined,
             terrainProvider: new Cesium.EllipsoidTerrainProvider(),
             sceneMode: Cesium.SceneMode.SCENE3D // Cesium.SceneMode.SCENE2D Cesium.SceneMode.COLUMBUS_VIEW
+        });
+
+        viewer.camera.setView({
+            destination: Cesium.Cartesian3.fromDegrees(114.0, 37, 20000000),
+            orientation: {
+                heading: 0.0,
+                pitch: -Cesium.Math.PI_OVER_TWO,
+                roll: 0.0
+            }
         });
 
         var compass = new Cesium.PLC.CompassButton(viewer._toolbar, viewer.scene);

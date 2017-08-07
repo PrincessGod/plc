@@ -84,7 +84,7 @@ gulp.task('minifyRelease', ['delMinify'], function() {
         useCombine: false,
         optimizer: 'uglify2',
         outputDirectory: path.join('Build', 'Cesium')
-    }).then(gulp.src([path.join('Source', 'require.js'), path.join('Apps','app.js')])
+    }).then(gulp.src([path.join('Source', 'require.js'), 'Apps/*'])
                 .pipe(gulp.dest(path.join('Build', 'Cesium')))
     );
 });
