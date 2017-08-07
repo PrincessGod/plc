@@ -2,16 +2,11 @@
 <html lang="en">
 
 <head>
-    <!-- Use correct character set. -->
-    <meta charset="utf-8">
-    <!-- Tell IE to use the latest, best version. -->
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <!-- Make the application on mobile take up the full browser screen and disable user scaling. -->
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <title>ImageryLayers</title>
+    <link href="./Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+    <script src="./Build/Cesium/Sandcastle-header.js"></script>
     <script type="text/javascript" data-main="./Build/Cesium/plc" src="./Build/Cesium/require.js"></script>
-    <title>Hello World!</title>
     <style>
-    @import url(./Build/Cesium/Widgets/widgets.css);
     html,
     body,
     #cesiumContainer {
@@ -20,6 +15,14 @@
         margin: 0;
         padding: 0;
         overflow: hidden;
+    }
+
+    #toolbar {
+        margin: 5px;
+        padding: 2px 5px;
+        position: absolute;
+        left: 0px;
+        top: 0px;
     }
 
     #loading-container {
@@ -151,7 +154,8 @@
         <p style="margin-top: 40px; text-align: center; font-size: 22px; color: #aaa">Loading...</p>
     </div>
     <div id="cesiumContainer"></div>
-    <script type="text/javascript" src="./Build/Cesium/vectorLayer.js"></script>
+    <div id="toolbar"></div>
+    <script type="text/javascript" src="./Build/Cesium/imageryLayers.js"></script>
 </body>
 
 </html>
