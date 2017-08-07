@@ -14,6 +14,9 @@ const globby = require('globby');
 const gulpInsert = require('gulp-insert');
 const rimraf = require('rimraf');
 
+const packageJson = require('./package.json');
+const version = packageJson.version;
+
 //travis reports 32 cores but only has 3GB of memory, which causes the VM to run out.  Limit to 8 cores instead.
 const concurrency = Math.min(os.cpus().length, 8);
 
@@ -84,6 +87,27 @@ gulp.task('minifyRelease', ['delMinify'], function() {
     }).then(gulp.src([path.join('Source', 'require.js'), path.join('Apps','app.js')])
                 .pipe(gulp.dest(path.join('Build', 'Cesium')))
     );
+});
+
+gulp.task('generateDocumentation', function() {
+    var envPathSeperator = os.platform() === 'win32' ? ';' : ':';
+
+    return new Promise(function(resolve, reject) {
+        child_process.exec('jsdoc --configure Tools/jsdoc/conf.json', {
+            env : {
+                PATH : process.env.PATH + envPathSeperator + 'node_modules/.bin',
+                CESIUM_VERSION : version
+            }
+        }, function(error, stdout, stderr) {
+            if (error) {
+                console.log(stderr);
+                return reject(error);
+            }
+            console.log(stdout);
+            var stream = gulp.src('Documentation/Images/**').pipe(gulp.dest('Build/Documentation/Images'));
+            return streamToPromise(stream).then(resolve);
+        });
+    });
 });
 
 //

@@ -18,8 +18,16 @@
             creditContainer: document.createElement('DIV'),
 
             // Display
-            imageryProvider: Cesium.createTileMapServiceImageryProvider({
-                url: Cesium.buildModuleUrl('Assets/Textures/NaturalEarthII')
+            imageryProvider : new Cesium.WebMapTileServiceImageryProvider({
+                url : 'http://t0.tianditu.com/vec_c/wmts?',
+                layer : 'vec',
+                style : 'default',
+                format : 'tiles',
+                tileMatrixSetID : 'c',
+                tilingScheme : new Cesium.GeographicTilingScheme(),
+                credit : new Cesium.Credit('天地图矢量地图'),
+                maximumLevel : 17,
+                tileMatrixLabels:['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19']
             }),
             terrainProviderViewModels: undefined,
             terrainProvider: new Cesium.EllipsoidTerrainProvider(),

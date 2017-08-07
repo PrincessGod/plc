@@ -16,6 +16,14 @@ define([
     SceneMode) {
     'use strict';
 
+    /**
+     * The view model for {@link CompassButton}
+     * @alias CompassButtonViewModel
+     * @constructor
+     *
+     * @param {Scene} scene The scene instance to use.
+     * @param {Number} [duration] The duration of the camera flight in seconds.
+     */
     function CompassButtonViewModel(scene, duration) {
         //>>includeStart('debug', pragmas.debug);
         if (!defined(scene)) {
@@ -54,26 +62,54 @@ define([
 
         this._headingStyle = "rotate(0deg)";
 
+        /**
+         * Gets or sets the tooltip.  This property is observable.
+         *
+         * @type {String}
+         */
         this.tooltip = '指南针';
 
         knockout.track(this, ['tooltip', '_headingStyle']);
     }
 
     defineProperties(CompassButtonViewModel.prototype, {
+        /**
+         * Gets the scene to control.
+         * @memberof CompassButton.prototype
+         *
+         * @type {Scene}
+         */
         scene: {
             get: function() {
                 return this._scene;
             }
         },
 
+        /**
+         * Gets the Command that is executed when the button is clicked.
+         * @memberof CompassButtonViewModel.prototype
+         *
+         * @type {Command}
+         */
         command: {
             get: function() {
                 return this._command;
             }
         },
 
+        /**
+         * Gets or sets the duration of the camera flight in seconds.
+         * A value of zero causes the camera to instantly switch to north direction.
+         * The duration will be computed based on the distance when undefined.
+         * @memberof CompassButtonViewModel.prototype
+         *
+         * @type {Number|undefined}
+         */
         duration: {
             get: function() {
+                this._duration = value;
+            },
+            set: function(value) {
                 //>>includeStart('debug', pragmas.debug);
                 if (defined(value) && value < 0) {
                     throw new DeveloperError('value must be positive.');
@@ -84,6 +120,12 @@ define([
             }
         },
 
+        /**
+         * Gets current north direction with the camera heading in radians
+         * @memberof CompassButtonViewModel.prototype
+         *
+         * @type {Number}
+         */
         headingStyle: {
             get: function() {
                 return this._headingStyle;
@@ -91,10 +133,17 @@ define([
         }
     });
 
+    /**
+     * @returns {Boolean} true if the object has been destroyed, false otherwise.
+     */
     CompassButtonViewModel.prototype.isDestroyed = function() {
         return false;
     };
 
+    /**
+     * Destorys the viewmodel.  Should be called if permanently
+     * removing the viewmodel and widget.
+     */
     CompassButtonViewModel.prototype.destroy = function() {
         this._scene.camera.changed.removeEventListener(this._getHeadingListener);
         destroyObject(this);

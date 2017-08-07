@@ -16,6 +16,16 @@ define([
     CompassButtonViewModel) {
     'use strict';
 
+    /**
+     * A single button widget for compass, click to heading the camera to north.
+     *
+     * @alias CompassButton
+     * @constructor
+     *
+     * @param {Element|String} container The DOM element or ID that will contain the widget.
+     * @param {Scene} scene The Scene instance to use.
+     * @param {Number} [duration] The time, in seconds, it takes to complate the camera heading north.
+     */
     function CompassButton(container, scene, duration) {
         //>>includeStart('debug', pragmas.debug);
         if (!defined(container)) {
@@ -48,12 +58,24 @@ cesiumSvgPath: { path: _svgPath, width: 28, height: 28, style:{transform: headin
     }
 
     defineProperties(CompassButton.prototype, {
+        /**
+         * Gets the parent container.
+         * @memberof CompassButton.prototype
+         *
+         * @type {Element}
+         */
         container: {
             get: function() {
                 return this._container;
             }
         },
 
+        /**
+         * Gets the view model.
+         * @memberof CompassButton.prototype
+         *
+         * @type {CompassButtonViewModel}
+         */
         viewModel: {
             get: function() {
                 return this._viewModel;
@@ -61,10 +83,17 @@ cesiumSvgPath: { path: _svgPath, width: 28, height: 28, style:{transform: headin
         }
     });
 
+    /**
+     * @returns {Boolean} true if the object has been destroyed, false otherwise.
+     */
     CompassButton.prototype.isDestroyed = function() {
         return false;
     };
 
+    /**
+     * Destorys the widgets.  Should be called if permanently
+     * removing the widget from layout.
+     */
     CompassButton.prototype.destroy = function() {
         this.viewModel.destroy();
 
