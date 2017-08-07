@@ -2,13 +2,13 @@
 // require in the complete Cesium object and reassign it globally.
 // This is meant for use with the Almond loader.
 require([
-    './js/test'
+    './Plc/plc'
 ], function(
-    test) {
+    plc) {
     'use strict';
     /*global self*/
     var scope = typeof window !== 'undefined' ? window : typeof self !== 'undefined' ? self : {};
-    scope.Cesium = test;
+    scope.Cesium = plc;
     scope.CESIUM_BASE_URL = './Build/Cesium';
 
     //>>includeStart('combinePath', pragmas.combinePath);
