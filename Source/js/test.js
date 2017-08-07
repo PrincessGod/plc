@@ -1,4 +1,5 @@
-define(['Cesium'], function(Cesium) {
+define(['Cesium', '../Enhancement/CompassButton/CompassButton', '../Enhancement/CompassButton/CompassButtonViewModel'], 
+    function(Cesium, CompassButton, CompassButtonViewModel) {
     'use strict';
     //>>includeStart('debug', pragmas.debug);
     console.log('%c Almond Debug ' + '%cOn ', 'background: #222; color: #bada55', 'background: #222;color: #3a3');
@@ -16,7 +17,9 @@ define(['Cesium'], function(Cesium) {
     console.log('%c Using ' + '%cRelease Path ', 'background: #222; color: #bada55', 'background: #222;color: #3a3');
     //>>includeEnd('combinePath');
 
-    var plc = "plc module";
+    var plc = {};
+    plc['CompassButton'] = CompassButton;
+    plc['CompassButtonViewModel'] = CompassButtonViewModel;
     Cesium.PLC = plc;
     return Cesium;
 });
