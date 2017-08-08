@@ -1,5 +1,15 @@
-define(['Cesium', '../Enhancement/CompassButton/CompassButton', '../Enhancement/CompassButton/CompassButtonViewModel'], 
-    function(Cesium, CompassButton, CompassButtonViewModel) {
+define([
+    'Cesium',
+    '../Enhancement/Widgets/CompassButton/CompassButton',
+    '../Enhancement/Widgets/CompassButton/CompassButtonViewModel',
+    '../Enhancement/Scene/TiandituVecImageryProvider',
+    '../Enhancement/Scene/TiandituTextImageryProvider'
+], function(
+    Cesium,
+    CompassButton,
+    CompassButtonViewModel,
+    TiandituVecImageryProvider,
+    TiandituTextImageryProvider) {
     'use strict';
     //>>includeStart('debug', pragmas.debug);
     console.log('%c Almond Debug ' + '%cOn ', 'background: #222; color: #bada55', 'background: #222;color: #3a3');
@@ -20,6 +30,8 @@ define(['Cesium', '../Enhancement/CompassButton/CompassButton', '../Enhancement/
     var plc = {};
     plc['CompassButton'] = CompassButton;
     plc['CompassButtonViewModel'] = CompassButtonViewModel;
+    plc['TiandituVecImageryProvider'] = TiandituVecImageryProvider;
+    plc['TiandituTextImageryProvider'] = TiandituTextImageryProvider;
     Cesium.PLC = plc;
     return Cesium;
 });

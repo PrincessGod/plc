@@ -1,10 +1,10 @@
 define([
-    '../../Core/defined',
-    '../../Core/defineProperties',
-    '../../Core/destroyObject',
-    '../../Core/DeveloperError',
-    '../../ThirdParty/knockout',
-    '../../Widgets/getElement',
+    '../../../Core/defined',
+    '../../../Core/defineProperties',
+    '../../../Core/destroyObject',
+    '../../../Core/DeveloperError',
+    '../../../ThirdParty/knockout',
+    '../../../Widgets/getElement',
     './CompassButtonViewModel'
 ], function(
     defined,
@@ -61,8 +61,8 @@ cesiumSvgPath: { path: _svgPath, width: 28, height: 28, style:{transform: headin
         /**
          * Gets the parent container.
          * @memberof CompassButton.prototype
-         *
          * @type {Element}
+         * @readonly
          */
         container: {
             get: function() {
@@ -73,8 +73,8 @@ cesiumSvgPath: { path: _svgPath, width: 28, height: 28, style:{transform: headin
         /**
          * Gets the view model.
          * @memberof CompassButton.prototype
-         *
          * @type {CompassButtonViewModel}
+         * @readonly
          */
         viewModel: {
             get: function() {

@@ -1,11 +1,11 @@
 define([
-    '../../Core/defined',
-    '../../Core/defineProperties',
-    '../../Core/DeveloperError',
-    '../../ThirdParty/knockout',
-    '../../Widgets/createCommand',
-    '../../Core/destroyObject',
-    '../../Scene/SceneMode'
+    '../../../Core/defined',
+    '../../../Core/defineProperties',
+    '../../../Core/DeveloperError',
+    '../../../ThirdParty/knockout',
+    '../../../Widgets/createCommand',
+    '../../../Core/destroyObject',
+    '../../../Scene/SceneMode'
 ], function(
     defined,
     defineProperties,
@@ -59,7 +59,7 @@ define([
             return currentHeading;
         };
         this._scene.camera.changed.addEventListener(this._getHeadingListener);
-
+        this._scene.camera.moveEnd.addEventListener(this._getHeadingListener);
         this._headingStyle = "rotate(0deg)";
 
         /**
@@ -76,8 +76,8 @@ define([
         /**
          * Gets the scene to control.
          * @memberof CompassButton.prototype
-         *
          * @type {Scene}
+         * @readonly
          */
         scene: {
             get: function() {
@@ -88,8 +88,8 @@ define([
         /**
          * Gets the Command that is executed when the button is clicked.
          * @memberof CompassButtonViewModel.prototype
-         *
          * @type {Command}
+         * @readonly
          */
         command: {
             get: function() {
@@ -102,7 +102,6 @@ define([
          * A value of zero causes the camera to instantly switch to north direction.
          * The duration will be computed based on the distance when undefined.
          * @memberof CompassButtonViewModel.prototype
-         *
          * @type {Number|undefined}
          */
         duration: {
@@ -123,8 +122,8 @@ define([
         /**
          * Gets current north direction with the camera heading in radians
          * @memberof CompassButtonViewModel.prototype
-         *
          * @type {Number}
+         * @readonly
          */
         headingStyle: {
             get: function() {
@@ -146,6 +145,8 @@ define([
      */
     CompassButtonViewModel.prototype.destroy = function() {
         this._scene.camera.changed.removeEventListener(this._getHeadingListener);
+        this._scene.camera.moveEnd.removeEventListener(this._getHeadingListener);
+        this._scene.camera.percentageChanged = 0.1;
         destroyObject(this);
     };
 
