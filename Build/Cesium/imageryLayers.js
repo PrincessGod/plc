@@ -1,49 +1,24 @@
 require(['plc'], function() {
     'user strict';
-
     //
     // Init
     //
-    var tiandituVecLayer = new Cesium.WebMapTileServiceImageryProvider({
-        url: 'http://t0.tianditu.com/vec_c/wmts?',
-        layer: 'vec',
-        style: 'default',
-        format: 'tiles',
-        tileMatrixSetID: 'c',
-        tilingScheme: new Cesium.GeographicTilingScheme(),
-        credit: new Cesium.Credit('天地图全球矢量服务'),
-        maximumLevel: 17,
-        tileMatrixLabels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19']
-    });
-
-    var tiandituTextLayer = new Cesium.WebMapTileServiceImageryProvider({
-        url: 'http://t0.tianditu.com/cva_c/wmts?',
-        layer: 'cva',
-        style: 'default',
-        format: 'tiles',
-        tileMatrixSetID: 'c',
-        tilingScheme: new Cesium.GeographicTilingScheme(),
-        credit: new Cesium.Credit('天地图全球中文标注'),
-        maximumLevel: 17,
-        tileMatrixLabels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19']
-    });
-
+    var tiandituVecLayer = new Cesium.PLC.TiandituVecImageryProvider();
+    tiandituVecLayer = tiandituVecLayer && tiandituVecLayer.imageryProvider;
+    var tiandituTextLayer = new Cesium.PLC.TiandituTextImageryProvider();
+    tiandituTextLayer = tiandituTextLayer && tiandituTextLayer.imageryProvider;
     var mapBoxImgLayer = new Cesium.MapboxImageryProvider({
         mapId: 'mapbox.streets'
     });
-
     var openStreetMapLayer = new Cesium.createOpenStreetMapImageryProvider({
         url: 'https://a.tile.openstreetmap.org/'
     });
-
     var ESRIWorldImageLayer = new Cesium.ArcGisMapServerImageryProvider({
         url: 'https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer',
         enablePickFeatures: false
     });
 
     document.getElementById('loading-container').style.display = 'none';
-
-
 
     var viewer = new Cesium.Viewer('cesiumContainer', {
         // Wedgets
