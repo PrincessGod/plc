@@ -43,7 +43,8 @@ define([
         '../SelectionIndicator/SelectionIndicator',
         '../subscribeAndEvaluate',
         '../Timeline/Timeline',
-        '../VRButton/VRButton'
+        '../VRButton/VRButton',
+        '../../Enhancement/DataSources/DOMLabelCollection'
     ], function(
         BoundingSphere,
         Cartesian3,
@@ -89,7 +90,8 @@ define([
         SelectionIndicator,
         subscribeAndEvaluate,
         Timeline,
-        VRButton) {
+        VRButton,
+        DOMLabelCollection) {
     'use strict';
 
     var boundingSphereScratch = new BoundingSphere();
@@ -262,6 +264,7 @@ define([
      * @param {Boolean} [options.navigationHelpButton=true] If set to false, the navigation help button will not be created.
      * @param {Boolean} [options.navigationInstructionsInitiallyVisible=true] True if the navigation instructions should initially be visible, or false if the should not be shown until the user explicitly clicks the button.
      * @param {Boolean} [options.scene3DOnly=false] When <code>true</code>, each geometry instance will only be rendered in 3D to save GPU memory.
+     * @param {Boolean} [options.domLabel=true] When <code>true</code>, add a div container for {@link Viewer#domLabels}.
      * @param {ClockViewModel} [options.clockViewModel=new ClockViewModel(options.clock)] The clock view model to use to control current time.
      * @param {ProviderViewModel} [options.selectedImageryProviderViewModel] The view model for the current base imagery layer, if not supplied the first available base layer is used.  This value is only valid if options.baseLayerPicker is set to true.
      * @param {ProviderViewModel[]} [options.imageryProviderViewModels=createDefaultImageryProviderViewModels()] The array of ProviderViewModels to be selectable from the BaseLayerPicker.  This value is only valid if options.baseLayerPicker is set to true.
@@ -395,6 +398,11 @@ Either specify options.terrainProvider instead or set options.baseLayerPicker to
         var cesiumWidgetContainer = document.createElement('div');
         cesiumWidgetContainer.className = 'cesium-viewer-cesiumWidgetContainer';
         viewerContainer.appendChild(cesiumWidgetContainer);
+
+        // PLC DOMLabel container
+        var domlabelContainer = document.createElement('div');
+        domlabelContainer.className = 'plc-dom-label';
+        viewerContainer.appendChild(domlabelContainer);
 
         // Bottom container
         var bottomContainer = document.createElement('div');
@@ -650,6 +658,16 @@ Either specify options.terrainProvider instead or set options.baseLayerPicker to
             });
         }
 
+        //DOMLabel
+        var domLabel = options.domLabel;
+        if (!defined(domLabel)) {
+            domLabel = true;
+        }
+        if (domLabel) {
+            var labelCollection = new DOMLabelCollection(domlabelContainer, cesiumWidget.scene);
+            this._domlabelCollection = labelCollection;
+        }
+
         //Assign all properties to this instance.  No "this" assignments should
         //take place above this line.
         this._baseLayerPickerDropDown = baseLayerPickerDropDown;
@@ -659,6 +677,7 @@ Either specify options.terrainProvider instead or set options.baseLayerPicker to
         this._dataSourceChangedListeners = {};
         this._automaticallyTrackDataSourceClocks = defaultValue(options.automaticallyTrackDataSourceClocks, true);
         this._container = container;
+        this._domContainer = domlabelContainer;
         this._bottomContainer = bottomContainer;
         this._element = viewerContainer;
         this._cesiumWidget = cesiumWidget;
@@ -753,6 +772,18 @@ Either specify options.terrainProvider instead or set options.baseLayerPicker to
         container : {
             get : function() {
                 return this._container;
+            }
+        },
+
+        /**
+        * Gets the DOM element for the area containing the {@link Viewer#domLabels}.
+        * @memberof Viewer.prototype
+        * @type {Element}
+        * @readonly
+        */
+        domLabelContainer : {
+            get : function() {
+                return this._domContainer;
             }
         },
 
@@ -934,6 +965,18 @@ Either specify options.terrainProvider instead or set options.baseLayerPicker to
         dataSourceDisplay : {
             get : function() {
                 return this._dataSourceDisplay;
+            }
+        },
+
+        /**
+         * Gets the collection for {@link DOMLabel}s.
+         * @memberof Viewer.prototype
+         * @type {DOMLabelCollection}
+         * @readonly
+         */
+        domLabels : {
+            get : function() {
+                return this._domlabelCollection;
             }
         },
 

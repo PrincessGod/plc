@@ -52,6 +52,7 @@ define([
 
 
         this._scene.camera.percentageChanged = 0.01;
+
         this._getHeadingListener = function() {
             currentHeading = that._scene.camera.heading % (Math.PI * 2) * -1;
             currentHeading = (currentHeading / Math.PI * 180).toFixed(0);
@@ -60,6 +61,7 @@ define([
         };
         this._scene.camera.changed.addEventListener(this._getHeadingListener);
         this._scene.camera.moveEnd.addEventListener(this._getHeadingListener);
+
         this._headingStyle = "rotate(0deg)";
 
         /**

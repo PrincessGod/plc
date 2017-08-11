@@ -9,7 +9,7 @@ if (typeof Cesium !== "undefined") {
     console.log("Cesium should not be defined at this time.");
 } else if (typeof require === "function") {
     require(['plcjs/plc'], function(Cesium) {
-			this.viewer = new Cesium.Viewer('cesiumContainer', {
+        this.viewer = new Cesium.Viewer('cesiumContainer', {
             // Wedgets
             animation: false,
             timeline: false,

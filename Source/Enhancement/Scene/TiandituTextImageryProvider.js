@@ -4,14 +4,16 @@ define([
     '../../Core/GeographicTilingScheme',
     '../../Core/Credit',
     '../../Core/defineProperties',
-    '../../Core/destroyObject'
+    '../../Core/destroyObject',
+    '../../Core/defined'
 ], function(
     WebMapTileServiceImageryProvider,
     defaultValue,
     GeographicTilingScheme,
     Credit,
     defineProperties,
-    destroyObject) {
+    destroyObject,
+    defined) {
     'use strict';
 
     /**
@@ -21,7 +23,7 @@ define([
      * @alias TiandituTextImageryProvider
      * @constructor
      *
-     * @param {Object} options for {@link WebMapTileServiceImageryProvider} Object with the following default properties:
+     * @param {Object} [options] for {@link WebMapTileServiceImageryProvider} Object with the following default properties:
      * @param {String} [options.url='http://t0.tianditu.com/cva_c/wmts?'] The base URL for the WMTS GetTile operation (add "SERVICE=WMTS&REQUEST=GetCapabilities" to check "getTile" interface).
      * @param {String} [options.layer='cva'] The layer name for WMTS requests.
      * @param {String} [options.style='default'] The style name for WMTS requests.
@@ -42,15 +44,15 @@ define([
      * @see WebMapTileServiceImageryProvider
      */
     function TiandituTextImageryProvider(options) {
-        options = defaultValue(options, {});
+        options = defaultValue(options, defaultValue.EMPTY_OBJECT);
 
         options.url = defaultValue(options.url, 'http://t0.tianditu.com/cva_c/wmts?');
         options.layer = defaultValue(options.layer, 'cva');
         options.style = defaultValue(options.style, 'default');
         options.format = defaultValue(options.format, 'tiles');
         options.tileMatrixSetID = defaultValue(options.tileMatrixSetID, 'c');
-        options.tilingScheme = defaultValue(options.tilingScheme, new GeographicTilingScheme());
-        options.credit = defaultValue(options.credit, new Credit('Tianditu Vector Layer'));
+        options.tilingScheme = defined(deoptions.tilingScheme) ? deoptions.tilingScheme : new GeographicTilingScheme();
+        options.credit = defined(options.credit) ? options.credit : new Credit('Tianditu Vector Layer');
         options.maximumLevel = defaultValue(options.maximumLevel, 17);
         options.tileMatrixLabels = defaultValue(options.tileMatrixLabels, ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19']);
 

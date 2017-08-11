@@ -25,3 +25,4 @@ View
 
 Modify Source
 	Widgets/SvgPathBindingHandler.js -add stylebinding : L63 - L74
+	Widgets/Viewer/Viewer.js -add DOMLabelCollection and container : L47, L94, L401 - L404, L660 - L665, L773 - L778
