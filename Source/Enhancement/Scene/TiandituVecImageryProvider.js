@@ -44,7 +44,7 @@ define([
      * @see WebMapTileServiceImageryProvider
      */
     function TiandituVecImageryProvider(options) {
-        options = defaultValue(options, defaultValue.EMPTY_OBJECT);
+        options = defaultValue(options, {});
 
         options.url = defaultValue(options.url, 'http://t0.tianditu.com/vec_c/wmts?');
         options.layer = defaultValue(options.layer, 'vec');

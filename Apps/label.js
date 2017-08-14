@@ -1,3 +1,7 @@
+requirejs.config({
+    waitSeconds: 200
+});
+
 require(['plc'], function() {
     'user strict';
     //
