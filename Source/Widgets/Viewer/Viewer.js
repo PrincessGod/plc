@@ -401,7 +401,7 @@ Either specify options.terrainProvider instead or set options.baseLayerPicker to
 
         // PLC DOMLabel container
         var domlabelContainer = document.createElement('div');
-        domlabelContainer.className = 'plc-dom-label';
+        domlabelContainer.className = 'plc-dom-label-container';
         viewerContainer.appendChild(domlabelContainer);
 
         // Bottom container

@@ -25,6 +25,7 @@ define([
      * @param {Object} options Object with the following properties:
      * @param {Object} [options.id] A unique identifier for this object. If none is provided, a GUID is generated.
      * @param {String} [options.name] A human readable name to display to users. It does not have to be unique.
+     * @param {String} [options.className="plc-dom-label"] The className property for DOM element of this object.
      * @param {Cartesian3} options.position The label position, pin in the 3d scene.
      * @param {Boolean} [options.show=true] A boolean value indicating if the label show or not.
      * @param {String} [options.text] A string property to show in label.
@@ -51,6 +52,7 @@ define([
 
         this._id = id;
         this._name = options.name;
+        this._className = defaultValue(options.className, 'plc-dom-label');
         this._show = defaultValue(options.show, true);
         this._text = defaultValue(options.text, '');
         this._domlabelCollection = undefined;
@@ -60,10 +62,9 @@ define([
 
     function createDOMLabel(options, domLabel) {
         var label = document.createElement('div');
+        label.className = domLabel._className;
         label.style.position = 'absolute';
         label.style.display = domLabel._show ? 'block' : 'none';
-        label.style['pointer-events'] = 'none';
-        label.style.padding = '4px';
         label.innerHTML = options.text;
         return label;
     }
@@ -100,6 +101,27 @@ define([
             }
         },
 
+        /**
+         * Gets or sets the className property of {@link DOMLabel#label} element,
+         * default value is "plc-dom-label".
+         * @memberof DOMLabel.prototype
+         * @type {String}
+         */
+        className: {
+            get: function() {
+                return this._className;
+            },
+            set: function(value) {
+                //>>includeStart('debug', pragmas.debug);
+                Check.typeOf.string('className', value);
+                //>>includeEnd('debug');
+
+                this._className = value;
+                if (defined(this._label)) {
+                    this._label.className = this._className;
+                }
+            }
+        },
         /**
          * Gets or sets whether this label should be displayed.  When set to true,
          * the label is only displayed if parent entity's show property is also true.
