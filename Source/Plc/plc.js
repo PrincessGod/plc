@@ -5,7 +5,8 @@ define([
     '../Enhancement/Scene/TiandituVecImageryProvider',
     '../Enhancement/Scene/TiandituTextImageryProvider',
     '../Enhancement/DataSources/DOMLabel',
-    '../Enhancement/DataSources/DOMLabelCollection'
+    '../Enhancement/DataSources/DOMLabelCollection',
+    '../Enhancement/Measurements/LineMeasure'
 ], function(
     Cesium,
     CompassButton,
@@ -13,7 +14,8 @@ define([
     TiandituVecImageryProvider,
     TiandituTextImageryProvider,
     DOMLabel,
-    DOMLabelCollection) {
+    DOMLabelCollection,
+    LineMeasure) {
     'use strict';
     //>>includeStart('debug', pragmas.debug);
     console.log('%c Almond Debug ' + '%cOn ', 'background: #222; color: #bada55', 'background: #222;color: #3a3');
@@ -38,6 +40,7 @@ define([
     plc['TiandituTextImageryProvider'] = TiandituTextImageryProvider;
     plc['DOMLabel'] = DOMLabel;
     plc['DOMLabelCollection'] = DOMLabelCollection;
+    plc['LineMeasure'] = LineMeasure;
     Cesium.PLC = plc;
     return Cesium;
 });
