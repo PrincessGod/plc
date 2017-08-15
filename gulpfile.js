@@ -15,6 +15,7 @@ const gulpInsert = require('gulp-insert');
 const rimraf = require('rimraf');
 
 const packageJson = require('./package.json');
+
 const version = packageJson.version;
 
 //travis reports 32 cores but only has 3GB of memory, which causes the VM to run out.  Limit to 8 cores instead.
@@ -28,14 +29,14 @@ gulp.task('delMinify', function(cb) {
         console.log('Deleted files and folders:\n', paths.join('\n'));
         cb();
     });
-})
+});
 
 gulp.task('delCombine', function(cb) {
     del(path.join('Build', 'CesiumUnminified')).then(paths => {
         console.log('Deleted files and folders:\n', paths.join('\n'));
         cb();
     });
-})
+});
 
 gulp.task('copyOrigin', ['delMinify'], function() {
     gulp.src('./Thirdparty/Cesium/Build/Cesium/**')
