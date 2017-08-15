@@ -38,6 +38,8 @@ define([
      * @param {String} [options.drawingLabelClassName="plc-line-mesaure-drawing-label"] The element calssName property of the {@link DOMLabel} which will show when drawing line.
      * @param {String} [options.measureLabelClassName="plc-line-measure-label"] The element className property of the {@link DOMLabel} which will contain the distance result when finsh draw.
      * 
+     * @demo {@link http://princessgod.com/plc/lineMeasurement|Label Measurement Demo}
+     * 
      * @see DOMLabel
      * @see DOMLabelCollection
      */
