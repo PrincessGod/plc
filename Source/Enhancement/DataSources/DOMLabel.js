@@ -6,7 +6,7 @@ define([
     '../../Core/DeveloperError',
     '../../Core/Check',
     '../../Core/defineProperties',
-], function(
+], function (
     Cartesian3,
     createGuid,
     defaultValue,
@@ -29,7 +29,8 @@ define([
      * @param {Cartesian3} options.position The label position, pin in the 3d scene.
      * @param {Boolean} [options.show=true] A boolean value indicating if the label show or not.
      * @param {String} [options.text] A string property to show in label.
-     *
+     * @param {Number} [options.vOffset=0] A number to set the vertical offset of label element in pixcel.
+     * @param {Number} [options.hOffset=0] A number to set the horizontal offset of label element in pixcel.
      * @demo {@link http://princessgod.com/plc/label|Label Demo}
      */
     function DOMLabel(options) {
@@ -58,6 +59,8 @@ define([
         this._domlabelCollection = undefined;
         this._label = createDOMLabel(options, this);
         this._position = options.position;
+        this._vOffset = defaultValue(options.vOffset, 0);
+        this._hOffset = defaultValue(options.hOffset, 0);
     }
 
     function createDOMLabel(options, domLabel) {
@@ -77,7 +80,7 @@ define([
          * @type {Object}
          */
         id: {
-            get: function() {
+            get: function () {
                 return this._id;
             }
         },
@@ -89,10 +92,10 @@ define([
          * @type {String}
          */
         name: {
-            get: function() {
+            get: function () {
                 return this._name;
             },
-            set: function(value) {
+            set: function (value) {
                 //>>includeStart('debug', pragmas.debug);
                 Check.typeOf.string('name', value);
                 //>>includeEnd('debug');
@@ -108,10 +111,10 @@ define([
          * @type {String}
          */
         className: {
-            get: function() {
+            get: function () {
                 return this._className;
             },
-            set: function(value) {
+            set: function (value) {
                 //>>includeStart('debug', pragmas.debug);
                 Check.typeOf.string('className', value);
                 //>>includeEnd('debug');
@@ -129,10 +132,10 @@ define([
          * @type {Boolean}
          */
         show: {
-            get: function() {
+            get: function () {
                 return this._show;
             },
-            set: function(value) {
+            set: function (value) {
                 //>>includeStart('debug', pragmas.debug);
                 if (!defined(value)) {
                     throw new DeveloperError('value is required.');
@@ -154,10 +157,10 @@ define([
          * @type {String}
          */
         text: {
-            get: function() {
+            get: function () {
                 return this._text;
             },
-            set: function(value) {
+            set: function (value) {
                 //>>includeStart('debug', pragmas.debug);
                 Check.typeOf.string('text', value);
                 //>>includeEnd('debug');
@@ -174,7 +177,7 @@ define([
          * @type {Element}
          */
         label: {
-            get: function() {
+            get: function () {
                 return this._label;
             }
         },
@@ -186,7 +189,7 @@ define([
          * @type {DOMLabelCollection}
          */
         domlabelCollection: {
-            get: function() {
+            get: function () {
                 return this._domlabelCollection;
             }
         },
@@ -197,10 +200,10 @@ define([
          * @type {Cartesian3}
          */
         position: {
-            get: function() {
+            get: function () {
                 return this._position;
             },
-            set: function(value) {
+            set: function (value) {
                 //>>includeStart('debug', pragmas.debug);
                 if (!defined(value)) {
                     throw new DeveloperError('value is required.');
@@ -211,6 +214,42 @@ define([
                 //>>includeEnd('debug');
 
                 this._position = value;
+            }
+        },
+
+        /**
+         * Gets or sets vertical offset of this label element in pixcel. 
+         * @memberof DOMLabel.prototype
+         * @type {Number}
+         */
+        vOffset: {
+            get: function () {
+                return this._vOffset;
+            },
+            set: function (value) {
+                //>>includeStart('debug', pragmas.debug);
+                Check.typeOf.number('vOffset', value);
+                //>>includeEnd('debug');
+
+                this._vOffset = value;
+            }
+        },
+
+        /**
+         * Gets or sets horizontal offset of this label element in pixcel. 
+         * @memberof DOMLabel.prototype
+         * @type {Number}
+         */
+        hOffset: {
+            get: function () {
+                return this._hOffset;
+            },
+            set: function (value) {
+                //>>includeStart('debug', pragmas.debug);
+                Check.typeOf.number('hOffset', value);
+                //>>includeEnd('debug');
+
+                this._hOffset = value;
             }
         }
     });

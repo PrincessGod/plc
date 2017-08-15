@@ -9,7 +9,7 @@ define([
     '../../Core/Cartesian3',
     '../../Core/RuntimeError',
     '../../Core/defaultValue'
-], function(
+], function (
     defined,
     defineProperties,
     Event,
@@ -71,7 +71,7 @@ define([
          * @readonly
          */
         container: {
-            get: function() {
+            get: function () {
                 return this._container;
             }
         },
@@ -84,7 +84,7 @@ define([
          * @type {DOMLabel[]}
          */
         values: {
-            get: function() {
+            get: function () {
                 return this._labels.values;
             }
         },
@@ -97,10 +97,10 @@ define([
          * @type {Boolean}
          */
         show: {
-            get: function() {
+            get: function () {
                 return this._show;
             },
-            set: function(value) {
+            set: function (value) {
                 //>>includeStart('debug', pragmas.debug);
                 if (!defined(value)) {
                     throw new DeveloperError('value is require');
@@ -132,7 +132,7 @@ define([
          * @type {Event}
          */
         collectionChanged: {
-            get: function() {
+            get: function () {
                 return this._collectionChanged;
             }
         }
@@ -176,7 +176,7 @@ define([
      *          text: "hello world 1"
      *      });
      */
-    DOMLabelCollection.prototype.add = function(label) {
+    DOMLabelCollection.prototype.add = function (label) {
         //>>includeStart('debug', pragmas.debug);
         if (!defined(label)) {
             throw new DeveloperError('label is required.');
@@ -214,7 +214,7 @@ define([
      * @example
      * viewer.domLabels.remove(label1);
      */
-    DOMLabelCollection.prototype.remove = function(label) {
+    DOMLabelCollection.prototype.remove = function (label) {
         if (!defined(label)) {
             return false;
         }
@@ -232,7 +232,7 @@ define([
      * @example
      * var isContain = viewer.domLabels.contains(label1);
      */
-    DOMLabelCollection.prototype.contains = function(label) {
+    DOMLabelCollection.prototype.contains = function (label) {
         if (!defined(label)) {
             throw new DeveloperError('label is required.');
         }
@@ -249,7 +249,7 @@ define([
      * @example
      * var isContain = viewer.domLabels.removeById(label1.id);
      */
-    DOMLabelCollection.prototype.removeById = function(id) {
+    DOMLabelCollection.prototype.removeById = function (id) {
         if (!defined(id)) {
             return false;
         }
@@ -275,7 +275,7 @@ define([
     /**
      * Remove all labels from the collection.
      */
-    DOMLabelCollection.prototype.removeAll = function() {
+    DOMLabelCollection.prototype.removeAll = function () {
         var labels = this._labels;
         var labelsLength = labels.length;
         var array = labels.values;
@@ -306,7 +306,7 @@ define([
      * @returns {DOMLabel} The label with the provided id or undefined if
      * the id did not exist in the collection.
      */
-    DOMLabelCollection.prototype.getById = function(id) {
+    DOMLabelCollection.prototype.getById = function (id) {
         //>>includeStart('debug', pragmas.debug);
         if (!defined(id)) {
             throw new DeveloperError('id is required.');
@@ -331,13 +331,13 @@ define([
                 labelScratch = arrayScratch[i]._label;
                 if (arrayScratch[i]._show) {
                     if (Cartesian3.dot(cameraPositionScratch, arrayScratch[i]._position) < 0) {
-                        labelScratch.style.display = "none";
+                        labelScratch.style.display = 'none';
                     } else {
                         positionScratch = this._scene.cartesianToCanvasCoordinates(arrayScratch[i]._position);
                         if (defined(positionScratch)) {
-                            labelScratch.style.display = "block";
-                            labelScratch.style.top = positionScratch.y - labelScratch.offsetHeight / 2 + 'px';
-                            labelScratch.style.left = positionScratch.x - labelScratch.offsetWidth / 2 + 'px';
+                            labelScratch.style.display = 'block';
+                            labelScratch.style.top = arrayScratch[i]._vOffset + positionScratch.y - labelScratch.offsetHeight / 2 + 'px';
+                            labelScratch.style.left = arrayScratch[i]._hOffset + positionScratch.x - labelScratch.offsetWidth / 2 + 'px';
                         }
                     }
                 }
