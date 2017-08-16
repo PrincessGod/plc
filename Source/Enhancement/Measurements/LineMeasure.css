@@ -12,7 +12,31 @@ div.plc-line-measure-label {
     background: rgba(255, 255, 255, 0.20);
     color: #000000;
     font-size: 12px;
-    border-left: 4px solid rgba(102, 205, 170, 1.0);
+    border-left: 4px solid rgba(102, 205, 170, 0.90);
+    border-radius: 0 4px 4px 0;
+    -webkit-border-radius: 0 4px 4px 0;
+    -moz-border-radius: 0 4px 4px 0;
+}
+
+div.plc-line-measure-vlabel {
+    pointer-events: none;
+    padding: 2px 8px;
+    background: rgba(255, 255, 255, 0.20);
+    color: #000000;
+    font-size: 12px;
+    border-left: 4px solid rgba(255, 255, 0, 0.90);
+    border-radius: 0 4px 4px 0;
+    -webkit-border-radius: 0 4px 4px 0;
+    -moz-border-radius: 0 4px 4px 0;
+}
+
+div.plc-line-measure-hlabel {
+    pointer-events: none;
+    padding: 2px 8px;
+    background: rgba(255, 255, 255, 0.20);
+    color: #000000;
+    font-size: 12px;
+    border-left: 4px solid rgba(255, 0, 0, 0.90);
     border-radius: 0 4px 4px 0;
     -webkit-border-radius: 0 4px 4px 0;
     -moz-border-radius: 0 4px 4px 0;
