@@ -6,7 +6,7 @@ define([
     '../../../Widgets/createCommand',
     '../../../Core/destroyObject',
     '../../../Scene/SceneMode'
-], function(
+], function (
     defined,
     defineProperties,
     DeveloperError,
@@ -36,24 +36,26 @@ define([
         this._duration = duration;
 
         var that = this;
-        this._command = createCommand(function() {
+        this._command = createCommand(function () {
             if (that._scene.mode === SceneMode.SCENE3D) {
-                that._scene.camera.flyTo({
-                    destination: that._scene.camera.position,
-                    duration: that._duration,
-                    orientation: {
-                        heading: 0,
-                        pitch: that._scene.camera.pitch,
-                        roll: that._scene.camera.roll
-                    }
-                });
+                if (that._scene.camera.positionWC.equals(that._scene.camera.position)) {
+                    that._scene.camera.flyTo({
+                        destination: that._scene.camera.position,
+                        duration: that._duration,
+                        orientation: {
+                            heading: 0,
+                            pitch: that._scene.camera.pitch,
+                            roll: that._scene.camera.roll
+                        }
+                    });
+                }
             }
         });
 
 
         this._scene.camera.percentageChanged = 0.01;
 
-        this._getHeadingListener = function() {
+        this._getHeadingListener = function () {
             currentHeading = that._scene.camera.heading % (Math.PI * 2) * -1;
             currentHeading = (currentHeading / Math.PI * 180).toFixed(0);
             that._headingStyle = 'rotate(' + currentHeading + 'deg)';
@@ -62,7 +64,7 @@ define([
         this._scene.camera.changed.addEventListener(this._getHeadingListener);
         this._scene.camera.moveEnd.addEventListener(this._getHeadingListener);
 
-        this._headingStyle = "rotate(0deg)";
+        this._headingStyle = 'rotate(0deg)';
 
         /**
          * Gets or sets the tooltip.  This property is observable.
@@ -82,7 +84,7 @@ define([
          * @readonly
          */
         scene: {
-            get: function() {
+            get: function () {
                 return this._scene;
             }
         },
@@ -94,7 +96,7 @@ define([
          * @readonly
          */
         command: {
-            get: function() {
+            get: function () {
                 return this._command;
             }
         },
@@ -107,10 +109,10 @@ define([
          * @type {Number|undefined}
          */
         duration: {
-            get: function() {
+            get: function () {
                 this._duration = value;
             },
-            set: function(value) {
+            set: function (value) {
                 //>>includeStart('debug', pragmas.debug);
                 if (defined(value) && value < 0) {
                     throw new DeveloperError('value must be positive.');
@@ -128,7 +130,7 @@ define([
          * @readonly
          */
         headingStyle: {
-            get: function() {
+            get: function () {
                 return this._headingStyle;
             }
         }
@@ -137,7 +139,7 @@ define([
     /**
      * @returns {Boolean} true if the object has been destroyed, false otherwise.
      */
-    CompassButtonViewModel.prototype.isDestroyed = function() {
+    CompassButtonViewModel.prototype.isDestroyed = function () {
         return false;
     };
 
@@ -145,7 +147,7 @@ define([
      * Destorys the viewmodel.  Should be called if permanently
      * removing the viewmodel and widget.
      */
-    CompassButtonViewModel.prototype.destroy = function() {
+    CompassButtonViewModel.prototype.destroy = function () {
         this._scene.camera.changed.removeEventListener(this._getHeadingListener);
         this._scene.camera.moveEnd.removeEventListener(this._getHeadingListener);
         this._scene.camera.percentageChanged = 0.1;

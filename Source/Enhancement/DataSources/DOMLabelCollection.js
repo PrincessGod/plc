@@ -326,7 +326,7 @@ define([
         if (this._show && this._labels.length !== 0) {
             arrayScratch = this._labels.values;
             lengthScratch = this._labels.length;
-            cameraPositionScratch = this._scene.camera.position;
+            cameraPositionScratch = this._scene.camera.positionWC;
             for (var i = 0; i < lengthScratch; i++) {
                 labelScratch = arrayScratch[i]._label;
                 if (arrayScratch[i]._show) {
