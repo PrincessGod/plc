@@ -88,27 +88,27 @@ require(['plc'], function () {
     var options = [{
         text: 'Aircraft',
         onselect: function () {
-            createModel('../models/CesiumAir/Cesium_Air.glb', 5000.0);
+            createModel('./models/CesiumAir/Cesium_Air.glb', 5000.0);
         }
     }, {
         text: 'Ground vehicle',
         onselect: function () {
-            createModel('../models/CesiumGround/Cesium_Ground.glb', 0);
+            createModel('./models/CesiumGround/Cesium_Ground.glb', 0);
         }
     }, {
         text: 'Hot Air Balloon',
         onselect: function () {
-            createModel('../models/CesiumBalloon/CesiumBalloon.glb', 1000.0);
+            createModel('./models/CesiumBalloon/CesiumBalloon.glb', 1000.0);
         }
     }, {
         text: 'Milk truck',
         onselect: function () {
-            createModel('../models/CesiumMilkTruck/CesiumMilkTruck-kmc.glb', 0);
+            createModel('./models/CesiumMilkTruck/CesiumMilkTruck-kmc.glb', 0);
         }
     }, {
         text: 'Skinned character',
         onselect: function () {
-            createModel('../models/CesiumMan/Cesium_Man.glb', 0);
+            createModel('./models/CesiumMan/Cesium_Man.glb', 0);
         }
     }];
 
