@@ -336,8 +336,8 @@ define([
                         positionScratch = this._scene.cartesianToCanvasCoordinates(arrayScratch[i]._position);
                         if (defined(positionScratch)) {
                             labelScratch.style.display = 'block';
-                            labelScratch.style.top = arrayScratch[i]._vOffset + positionScratch.y - labelScratch.offsetHeight / 2 + 'px';
-                            labelScratch.style.left = arrayScratch[i]._hOffset + positionScratch.x - labelScratch.offsetWidth / 2 + 'px';
+                            labelScratch.style.top = (arrayScratch[i]._vOffset + positionScratch.y - labelScratch.offsetHeight / 2).toFixed(0) + 'px';
+                            labelScratch.style.left = (arrayScratch[i]._hOffset + positionScratch.x - labelScratch.offsetWidth / 2).toFixed(0) + 'px';
                         }
                     }
                 }
