@@ -9,7 +9,7 @@ div.plc-line-mesaure-drawing-label {
 div.plc-line-measure-label {
     pointer-events: none;
     padding: 2px 8px;
-    background: rgba(255, 255, 255, 0.20);
+    background: rgba(102, 205, 170, 0.20);
     color: #000000;
     font-size: 12px;
     border-left: 4px solid rgba(102, 205, 170, 0.90);
@@ -21,7 +21,7 @@ div.plc-line-measure-label {
 div.plc-line-measure-vlabel {
     pointer-events: none;
     padding: 2px 8px;
-    background: rgba(255, 255, 255, 0.20);
+    background: rgba(255, 255, 0, 0.20);
     color: #000000;
     font-size: 12px;
     border-left: 4px solid rgba(255, 255, 0, 0.90);
@@ -33,7 +33,7 @@ div.plc-line-measure-vlabel {
 div.plc-line-measure-hlabel {
     pointer-events: none;
     padding: 2px 8px;
-    background: rgba(255, 255, 255, 0.20);
+    background: rgba(255, 0, 0, 0.20);
     color: #000000;
     font-size: 12px;
     border-left: 4px solid rgba(255, 0, 0, 0.90);

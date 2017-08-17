@@ -65,7 +65,6 @@ define([
 
         var status = {
             isStarted: false,
-            isFinished: false,
             startCartesian3: new Cartesian3(),
             endCartesian3: new Cartesian3(),
             startCartographic: new Cartographic(),
@@ -77,7 +76,7 @@ define([
         };
         this._viewer = options.viewer;
         this._labelCollection = defaultValue(options.labelCollection, options.viewer.domLabels);
-        this._scene = viewer.scene;
+        this._scene = this._viewer.scene;
         this._status = status;
         this._paintedLines = [];
         this._drawingLabelClassName = defaultValue(options.drawingLabelClassName, 'plc-line-mesaure-drawing-label');
@@ -89,7 +88,7 @@ define([
         this._geoDistanceCameraHeight = defaultValue(options.geoDistenceCameraHeight, 400000.0);
 
         var that = this;
-        this._drawingLine = viewer.entities.add({
+        this._drawingLine = this._viewer.entities.add({
             polyline: {
                 positions: new CallbackProperty(function () {
                     if (that._status.isStarted) {
@@ -100,21 +99,15 @@ define([
                 material: Color.HOTPINK
             }
         });
-        this._drawHandler = new ScreenSpaceEventHandler(viewer.canvas);
+        this._drawHandler = new ScreenSpaceEventHandler(this._viewer.canvas);
         this._drawingLable = this._labelCollection.add({
             position: this._status.endCartesian3,
             text: this._status.currentLength + ' m',
             show: false,
             className: this._drawingLabelClassName,
-            vOffset: -10
+            vOffset: -15
         });
-        this._currentLine = viewer.entities.add({
-            polyline: {
-                positions: [that._status.startCartesian3, that._status.endCartesian3],
-                width: 5,
-                material: Color.MEDIUMTURQUOISE
-            }
-        });
+        this._currentLine = undefined;
     }
 
     defineProperties(LineMeasure.prototype, {
@@ -334,17 +327,25 @@ define([
         tool._drawingLable.position = tool._status.endCartesian3;
     }
 
+    function setForCancel(tool) {
+        tool._status.isStarted = false;
+        tool._drawingLable.show = false;
+        tool._viewer.entities.remove(tool._currentLine);
+    }
+
     var pickPositionScratch = {};
+    var pickRayScratch = {};
     var featureScratch = {};
 
     function getPickPosition(tool, position) {
         if (tool._scene.mode === SceneMode.SCENE3D) {
             featureScratch = tool._scene.pick(position);
-            if (featureScratch && featureScratch.id.id !== tool._drawingLine.id && tool._scene.pickPositionSupported) {
-                pickPositionScratch = viewer.scene.pickPosition(position);
+            if (featureScratch && featureScratch.id.id !== tool._drawingLine.id
+                && tool._scene.pickPositionSupported) {
+                pickPositionScratch = tool._scene.pickPosition(position);
             } else {
-                var pickRay = tool._scene.camera.getPickRay(position);
-                pickPositionScratch = tool._scene.globe.pick(pickRay, tool._scene);
+                pickRayScratch = tool._scene.camera.getPickRay(position);
+                pickPositionScratch = tool._scene.globe.pick(pickRayScratch, tool._scene);
             }
             if (pickPositionScratch) {
                 return pickPositionScratch;
@@ -360,6 +361,12 @@ define([
             } else {
                 setForEnd(tool, pickPositionScratch);
             }
+        }
+    }
+
+    function rightClick(tool) {
+        if (tool._status.isStarted) {
+            setForCancel(tool);
         }
     }
 
@@ -381,10 +388,14 @@ define([
             this._drawHandler.destroy();
         }
         this._drawHandler = new ScreenSpaceEventHandler(this._viewer.canvas);
+
         var that = this;
         this._drawHandler.setInputAction(function (movement) {
             leftClick(that, movement);
         }, ScreenSpaceEventType.LEFT_CLICK);
+        this._drawHandler.setInputAction(function () {
+            rightClick(that);
+        }, ScreenSpaceEventType.RIGHT_CLICK);
         this._drawHandler.setInputAction(function (movement) {
             mouseMove(that, movement);
         }, ScreenSpaceEventType.MOUSE_MOVE);
