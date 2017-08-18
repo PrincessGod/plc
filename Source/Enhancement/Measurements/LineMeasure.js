@@ -45,7 +45,7 @@ define([
      * @param {Number} [options.geoDistenceCameraHeight=400000.0] If camera height less than this value, line distance will use the distance beitween two point without consider ellipsoid, 
      * if camera height more than the value then consider ellipsoid.
      * 
-     * @demo {@link http://princessgod.com/plc/lineMeasurement|Label Measurement Demo}
+     * @demo {@link http://princessgod.com/plc/lineMeasurement|Line Measurement Demo}
      * 
      * @see DOMLabel
      * @see DOMLabelCollection
@@ -340,9 +340,12 @@ define([
     function getPickPosition(tool, position) {
         if (tool._scene.mode === SceneMode.SCENE3D) {
             featureScratch = tool._scene.pick(position);
-            if (featureScratch && featureScratch.id.id !== tool._drawingLine.id
-                && tool._scene.pickPositionSupported) {
+            if (featureScratch && tool._scene.pickPositionSupported) {
                 pickPositionScratch = tool._scene.pickPosition(position);
+                if (!pickPositionScratch || Cartographic.fromCartesian(pickPositionScratch).height < 0) {
+                    pickRayScratch = tool._scene.camera.getPickRay(position);
+                    pickPositionScratch = tool._scene.globe.pick(pickRayScratch, tool._scene);
+                }
             } else {
                 pickRayScratch = tool._scene.camera.getPickRay(position);
                 pickPositionScratch = tool._scene.globe.pick(pickRayScratch, tool._scene);
