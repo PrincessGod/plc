@@ -37,6 +37,9 @@ require(['plc'], function () {
     var lineMeasure = new Cesium.PLC.LineMeasure({
         viewer: viewer
     });
+    var polylineMeasure = new Cesium.PLC.PolylineMeasure({
+        viewer: viewer
+    });
 
     function goHome() {
         viewer.camera.setView({
@@ -51,14 +54,33 @@ require(['plc'], function () {
 
     goHome();
 
-    Sandcastle.addToolbarButton('Start Measure', function () {
+    var currentMeaure;
+    Sandcastle.addToolbarButton('Line Measure', function () {
+        if (currentMeaure && currentMeaure !== lineMeasure) {
+            currentMeaure.endDraw();
+        }
+
+        currentMeaure = lineMeasure;
         lineMeasure.startDraw();
     }, 'toolbarbuttons');
+    Sandcastle.addToolbarButton('Polyline Measure', function () {
+        if (currentMeaure && currentMeaure !== polylineMeasure) {
+            currentMeaure.endDraw();
+        }
+
+        currentMeaure = polylineMeasure;
+        polylineMeasure.startDraw();
+    }, 'toolbarbuttons');
     Sandcastle.addToolbarButton('End Measure', function () {
+        polylineMeasure.endDraw();
         lineMeasure.endDraw();
+        currentMeaure = undefined;
     }, 'toolbarbuttons');
     Sandcastle.addToggleButton('ShowVH', false, function (checked) {
         lineMeasure.vhMeasure = checked;
+    }, 'toolbarbuttons');
+    Sandcastle.addToggleButton('ShowFragLength', false, function (checked) {
+        polylineMeasure.showFragLength = checked;
     }, 'toolbarbuttons');
 
     var lastEntity = {};
@@ -82,7 +104,10 @@ require(['plc'], function () {
                 uri: url
             }
         });
-        viewer.trackedEntity = lastEntity;
+        // viewer.trackedEntity = lastEntity;
+        viewer.camera.setView({
+            destination: Cesium.Cartesian3.fromRadians(cartegrao.longitude, cartegrao.latitude, height + 10)
+        });
     }
 
     var options = [{
