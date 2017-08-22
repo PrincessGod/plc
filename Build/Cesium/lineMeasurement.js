@@ -40,6 +40,10 @@ require(['plc'], function () {
     var polylineMeasure = new Cesium.PLC.PolylineMeasure({
         viewer: viewer
     });
+    var polygonMeasure = new Cesium.PLC.PolygonMeasure({
+        viewer: viewer
+    });
+
 
     function goHome() {
         viewer.camera.setView({
@@ -55,33 +59,42 @@ require(['plc'], function () {
     goHome();
 
     var currentMeaure;
-    Sandcastle.addToolbarButton('Line Measure', function () {
-        if (currentMeaure && currentMeaure !== lineMeasure) {
+
+    function switchCurrentTool(tool) {
+        if (currentMeaure && currentMeaure !== tool) {
             currentMeaure.endDraw();
         }
 
-        currentMeaure = lineMeasure;
-        lineMeasure.startDraw();
+        currentMeaure = tool;
+    }
+
+    Sandcastle.addToolbarButton('Line Measure', function () {
+        switchCurrentTool(lineMeasure);
+        currentMeaure.startDraw();
     }, 'toolbarbuttons');
     Sandcastle.addToolbarButton('Polyline Measure', function () {
-        if (currentMeaure && currentMeaure !== polylineMeasure) {
-            currentMeaure.endDraw();
-        }
-
-        currentMeaure = polylineMeasure;
-        polylineMeasure.startDraw();
+        switchCurrentTool(polylineMeasure);
+        currentMeaure.startDraw();
+    }, 'toolbarbuttons');
+    Sandcastle.addToolbarButton('Polygon Measure', function () {
+        switchCurrentTool(polygonMeasure);
+        currentMeaure.startDraw();
     }, 'toolbarbuttons');
     Sandcastle.addToolbarButton('End Measure', function () {
-        polylineMeasure.endDraw();
-        lineMeasure.endDraw();
-        currentMeaure = undefined;
+        if(currentMeaure) {
+            currentMeaure.endDraw();
+        }
     }, 'toolbarbuttons');
+
     Sandcastle.addToggleButton('ShowVH', false, function (checked) {
         lineMeasure.vhMeasure = checked;
-    }, 'toolbarbuttons');
+    }, 'toolbartogglebuttons');
     Sandcastle.addToggleButton('ShowFragLength', false, function (checked) {
         polylineMeasure.showFragLength = checked;
-    }, 'toolbarbuttons');
+    }, 'toolbartogglebuttons');
+    Sandcastle.addToggleButton('ShowSurfaceArea', false, function (checked) {
+        polygonMeasure.showSurface = checked;
+    }, 'toolbartogglebuttons');
 
     var lastEntity = {};
 
