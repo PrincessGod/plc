@@ -7,7 +7,8 @@ define([
     '../Enhancement/DataSources/DOMLabel',
     '../Enhancement/DataSources/DOMLabelCollection',
     '../Enhancement/Measurements/LineMeasure',
-    '../Enhancement/Measurements/PolylineMeasure'
+    '../Enhancement/Measurements/PolylineMeasure',
+    '../Enhancement/Measurements/PolygonMeasure'
 ], function (
     Cesium,
     CompassButton,
@@ -17,7 +18,8 @@ define([
     DOMLabel,
     DOMLabelCollection,
     LineMeasure,
-    PolylineMeasure) {
+    PolylineMeasure,
+    PolygonMeasure) {
     'use strict';
     //>>includeStart('debug', pragmas.debug);
     console.log('%c Almond Debug ' + '%cOn ', 'background: #222; color: #bada55', 'background: #222;color: #3a3');
@@ -44,6 +46,7 @@ define([
     plc['DOMLabelCollection'] = DOMLabelCollection;
     plc['LineMeasure'] = LineMeasure;
     plc['PolylineMeasure'] = PolylineMeasure;
+    plc['PolygonMeasure'] = PolygonMeasure;
     Cesium.PLC = plc;
     return Cesium;
 });

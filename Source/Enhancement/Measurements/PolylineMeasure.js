@@ -51,7 +51,7 @@ define([
     function PolylineMeasure(options) {
         //>>includeStart('debug', pragmas.debug);
         Check.defined('options', options);
-        Check.defined('options.viewer', options);
+        Check.defined('options.viewer', options.viewer);
         if (!defined(options.labelCollection) && !defined(options.viewer.domLabels)) {
             throw new DeveloperError('options.labelCollection is required');
         }
@@ -155,6 +155,18 @@ define([
          * 
          * @type {Array}
          * @readonly
+         * 
+        * @example
+         * 
+         * // Get the first painted polyline and label
+         * var paintedItem = polylineMeasure.paintedPolylines[0];
+         * 
+         * // Get the polyline object
+         * var polyline = paintedItem.line;
+         * 
+         * // Get the label object
+         * var label = paintedItem.label;
+         * 
          */
         paintedPolylines: {
             get: function () {
@@ -168,6 +180,7 @@ define([
          * @memberof PolylineMeasure.prototype
          * 
          * @type {Boolean}
+         * @default false
          */
         showFragLength: {
             get: function () {

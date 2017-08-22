@@ -2,3 +2,4 @@
 @import url(../DataSources/DOMLabel.css);
 @import url(../Measurements/LineMeasure.css);
 @import url(../Measurements/PolylineMeasure.css);
+@import url(../Measurements/PolygonMeasure.css);

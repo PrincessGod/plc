@@ -1,0 +1,23 @@
+div.plc-polygon-area-label {
+    pointer-events: none;
+    padding: 2px 8px;
+    background: rgba(23, 125, 184, 0.20);
+    color: rgba(0, 0, 0, 1.0);
+    font-size: 12px;
+    border-left: 4px solid rgba(23, 125, 184, 0.90);
+    border-radius: 0 4px 4px 0;
+    -webkit-border-radius: 0 4px 4px 0;
+    -moz-border-radius: 0 4px 4px 0;
+}
+
+div.plc-polygon-surface-area-label {
+    pointer-events: none;
+    padding: 2px 8px;
+    background: rgba(231, 201, 105, 0.20);
+    color: rgba(0, 0, 0, 1.0);
+    font-size: 12px;
+    border-left: 4px solid rgba(231, 201, 105, 0.90);
+    border-radius: 0 4px 4px 0;
+    -webkit-border-radius: 0 4px 4px 0;
+    -moz-border-radius: 0 4px 4px 0;
+}
