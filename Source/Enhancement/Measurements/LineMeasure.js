@@ -152,6 +152,18 @@ define([
          * @memberof LineMeasure.prototype
          * @type {Array}
          * @readonly
+         * 
+         * @example
+         * 
+         * // Get the first painted line and label
+         * var paintedItem = lineMeasure.paintedLines[0];
+         * 
+         * // Get the line object
+         * var line = paintedItem.line;
+         * 
+         * // Get the label object
+         * var label = paintedItem.label;
+         * 
          */
         paintedLines: {
             get: function () {
@@ -163,6 +175,7 @@ define([
          * Gets or sets whether the vertical and horizontal measure lines show or not after drawing.
          * @memberof LineMeasure.prototype
          * @type {Boolean}
+         * @default false
          */
         vhMeasure: {
             get: function () {
