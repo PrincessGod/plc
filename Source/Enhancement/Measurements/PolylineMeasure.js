@@ -42,7 +42,9 @@ define([
      * @param {String} [options.drawinglabelClassName="plc-line-mesaure-drawing-label"] The clasName property of the {@link DOMLabel} which will move with mouse and show in drawing.
      * @param {String} [options.measureLabelClassName="plc-line-measure-label"] The calssName property of the {@link DOMLabel} which will show at last point with total length after drawing.
      * @param {string} [options.measureLabelCalssName="plc-polyline-measure-middle-label"] The className property of the {@link DOMLabel} which will show if the {@link PolylineMeasure#showFragLength} property is true.
-     *      
+     * @param {Color} [options.drawingLineColor=Color.HOTPINK] The color of the drawing polyline, witch will show after star drawing and before finshed.
+     * @param {Color} [options.paintedLineColor=Color.MEDIUMTURQUOISE] The color of the painted polyline, which will show finish drawing.
+     *
      * @demo {@link http://princessgod.com/plc/lineMeasurement|Line Measurement Demo}
      * 
      * @see DOMLabel
@@ -68,6 +70,9 @@ define([
         this._drawingLabelClassName = defaultValue(options.drawingLabelClassName, 'plc-line-mesaure-drawing-label');
         this._measureLabelClassName = defaultValue(options.measureLabelClassName, 'plc-line-measure-label');
         this._measureLabelMClassName = defaultValue(options.measureLabelMClassName, 'plc-polyline-measure-middle-label');
+        this._drawingLineColor = defined(options.drawingLineColor) ? options.drawingLineColor : Color.HOTPINK;
+        this._paintedLineColor = defined(options.paintedLineColor) ? options.paintedLineColor : Color.MEDIUMTURQUOISE;
+
 
         var status = {
             isStarted: false,
@@ -85,6 +90,7 @@ define([
 
         var that = this;
         this._drawingPolyline = viewer.entities.add({
+            name: 'PLC-POLYLINE-MEASURE-DRAWING-LINE',
             polyline: {
                 positions: new CallbackProperty(function () {
                     if (that._status.isStarted) {
@@ -92,10 +98,11 @@ define([
                     }
                 }, false),
                 width: 5,
-                material: Color.HOTPINK
+                material: that._drawingLineColor
             }
         });
         this._drawingLabel = this._labelCollection.add({
+            name: 'PLC-POLYLINE-MEASURE-DRAWING-LABEL',
             position: new Cartesian3(),
             text: '0 m',
             vOffset: -15,
@@ -156,7 +163,7 @@ define([
          * @type {Array}
          * @readonly
          * 
-        * @example
+         * @example
          * 
          * // Get the first painted polyline and label
          * var paintedItem = polylineMeasure.paintedPolylines[0];
@@ -228,6 +235,7 @@ define([
         updateCurrentLength(tool);
         if (tool._showFragLength) {
             var lengthLabel = tool._labelCollection.add({
+                name: 'plc-polyline-measure-painte-m-' + tool.paintedLines.length,
                 position: getMiddlePoint(tool._status.geodesic, tool._status.startCartographic, tool._status.endCartographic),
                 text: getLengthString(tool._status.currentLength),
                 className: tool._measureLabelMClassName
@@ -247,6 +255,7 @@ define([
         tool._currentPolyline.polyline.positions = tool._status.pointsCartesian3;
 
         var lengthLabel = tool._labelCollection.add({
+            name: 'plc-polyline-measure-painte-' + tool.paintedLines.length,
             position: tool._status.pointsCartesian3[tool._status.pointsCartesian3.length - 1],
             text: getLengthString(tool._status.totalLength),
             className: tool._measureLabelClassName
@@ -282,10 +291,11 @@ define([
         tool._drawingLabel.show = true;
         tool._drawingLabel.position = tool._status.endCartesian3;
         tool._currentPolyline = tool._viewer.entities.add({
+            name: 'plc-polyline-measure-painte-' + tool.paintedLines.length,
             polyline: {
                 positions: [tool._status.startCartesian3, tool._status.endCartesian3],
                 width: 5,
-                material: Color.MEDIUMTURQUOISE
+                material: tool._paintedLineColor
             }
         });
         tool._labelCollection.remove(tool._drawingLabel);

@@ -40,6 +40,13 @@ define([
      * @param {Boolean} [options.showSurface=false] While true, after drawing polygon will draw the ground cover area of polygon, false otherwise.
      * @param {String} [options.areaLabelClassName="plc-polygon-area-label"] The element calssName property of {@link DOMLabel} object, which will show in the center of painted polygon.
      * @param {String} [options.surfaceAreaLabelClassName="plc-polygon-surface-area-label"] The element calssName property of DOMLabel object, which will show in the center of the surface polygon while options.showSurface is true.
+     * @param {Color} [options.drawingPolygonFill=Color.fromBytes(1, 186, 239, 200)] The fill color of drawing polygon, which will show after begin drawing and before finish drawing.
+     * @param {Color} [options.drawingPolygonStroke=Color.fromBytes(23, 125, 184, 200)] The outline color of drawing polygon, which will show after begin drawing and before finish drawing.
+     * @param {Color} [options.drawingPolylineColor=Color.RED] The color of drawing polyline, which contant the picked points.
+     * @param {Color} [options.surfacePolygonFill=Color.fromBytes(231, 201, 105, 200)] The fill color of surface polygon, which will show when options.showSurface = true.
+     * @param {Color} [options.surfacePolygonStroke=Color.fromBytes(225, 224, 186, 200)] The outline color of surface polygon, which will show when options.showSurface = true.
+     * @param {Color} [options.paintedPolygonFill=Color.fromBytes(104, 200, 200, 200)] The fill color of painted polygon, which will show when finish drawing.
+     * @param {Color} [options.paintedPolygonStroke=Color.fromBytes(23, 125, 184, 200)] The outline color of painted polygon, which will show when finish drawing.
      * 
      * @demo {@link http://princessgod.com/plc/lineMeasurement|Line Measurement Demo}
      * 
@@ -63,6 +70,14 @@ define([
         this._areaLabelClassName = defaultValue(options.areaLabelClassName, 'plc-polygon-area-label');
         this._surfaceAreaLabelClassName = defaultValue(options.surfaceAreaLabelClassName, 'plc-polygon-surface-area-label');
         this._showSurface = defaultValue(options.showSurface, false);
+        this._drawingPolygonFill = defined(options.drawingPolygonFill) ? options.drawingPolygonFill : Color.fromBytes(1, 186, 239, 200);
+        this._drawingPolygonStroke = defined(options.drawingPolygonStroke) ? options.drawingPolygonStroke : Color.fromBytes(23, 125, 184, 200);
+        this._drawingPolylineColor = defined(options.drawingPolylineColor) ? options.drawingPolylineColor : Color.RED;
+        this._surfacePolygonFill = defined(options.surfacePolygonFill) ? options.surfacePolygonFill : Color.fromBytes(231, 201, 105, 200);
+        this._surfacePolygonStroke = defined(options.surfacePolygonStroke) ? options.surfacePolygonStroke : Color.fromBytes(225, 224, 186, 200);
+        this._paintedPolygonFill = defined(options.paintedPolygonFill) ? options.paintedPolygonFill : Color.fromBytes(104, 200, 200, 200);
+        this._paintedPolygonStroke = defined(options.paintedPolygonStroke) ? options.paintedPolygonStroke : Color.fromBytes(23, 125, 184, 200);
+
 
         this._status = {
             isStarted: false,
@@ -81,10 +96,10 @@ define([
                         return getSurfacePoints(that._status);
                     }
                 }, false),
-                material: Color.fromBytes(231, 201, 105, 200),
+                material: that._surfacePolygonFill,
                 height: 0,
                 outline: true,
-                outlineColor: Color.fromBytes(225, 224, 186, 200),
+                outlineColor: that._surfacePolygonStroke,
                 perPositionHeight: false,
             }
         });
@@ -95,9 +110,9 @@ define([
                 hierarchy: new CallbackProperty(function () {
                     return getDrawingPoints(that._status);
                 }, false),
-                material: Color.fromBytes(1, 186, 239, 200),
+                material: that._drawingPolygonFill,
                 outline: true,
-                outlineColor: Color.fromBytes(23, 125, 184, 200),
+                outlineColor: that._drawingPolygonStroke,
                 perPositionHeight: true,
             }
         });
@@ -108,7 +123,7 @@ define([
                 positions: new CallbackProperty(function () {
                     return getDrawingPoints(that._status);
                 }, false),
-                material: Color.RED,
+                material: that._drawingPolylineColor
             }
         });
     }
@@ -307,16 +322,18 @@ define([
 
     function paintSurface(tool) {
         var surface = tool._currentPolyline = tool._viewer.entities.add({
+            name: 'plc-polygon-measure-surface-' + tool._paintedPolygons.length,
             polygon: {
                 hierarchy: tool._status.pointsSurface,
-                material: Color.fromBytes(231, 201, 105, 200),
+                material: tool._surfacePolygonFill,
                 height: 0,
                 outline: true,
-                outlineColor: Color.fromBytes(225, 224, 186, 200),
+                outlineColor: tool._surfacePolygonStroke
             }
         });
 
         var areaLabel = tool._labelCollection.add({
+            name: 'plc-polygon-measure-surface-' + tool._paintedPolygons.length,
             position: getPolygonCenter(surface),
             text: getAreaString(getPolygonArea(surface)),
             className: tool._surfaceAreaLabelClassName
@@ -330,16 +347,18 @@ define([
 
     function paintePolygon(tool) {
         var polygon = tool._currentPolyline = tool._viewer.entities.add({
+            name: 'plc-polygon-measure-painted-' + tool._paintedPolygons.length,
             polygon: {
                 hierarchy: tool._status.pointsCartesian3,
-                material: Color.fromBytes(104, 200, 200, 200),
+                material: tool._paintedPolygonFill,
                 outline: true,
-                outlineColor: Color.fromBytes(23, 125, 184, 200),
+                outlineColor: tool._paintedPolygonStroke,
                 perPositionHeight: true,
             }
         });
 
         var areaLabel = tool._labelCollection.add({
+            name: 'plc-polygon-measure-painted-' + tool._paintedPolygons.length,
             position: getPolygonCenter(polygon),
             text: getAreaString(getPolygonArea(polygon)),
             className: tool._areaLabelClassName

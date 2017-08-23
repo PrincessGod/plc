@@ -44,6 +44,10 @@ define([
      * @param {Boolean} [options.vhMeasure=false] If true, after drawing will show vertical and horizontal lines, false otherwise.
      * @param {Number} [options.geoDistenceCameraHeight=400000.0] If camera height less than this value, line distance will use the distance beitween two point without consider ellipsoid, 
      * if camera height more than the value then consider ellipsoid.
+     * @param {Color} [options.drawingLineColor=Color.HOTPINK] The color of drawing line, whict will show and move with mouse after drawing begin.
+     * @param {Color} [options.paintedLineColor=Color.MEDIUMTURQUOISE] The color of painted lines, which will show after drawing.
+     * @param {Color} [options.verticalLineColor=Color.YELLOW] The color of vertical distance line, which will show after drawing when options.vhMeasure = true.
+     * @param {Color} [options.horizontalLineColor=Color.RED] The color of horizontal distance line, which will show after drawing when options.vhMeasure = true.
      * 
      * @demo {@link http://princessgod.com/plc/lineMeasurement|Line Measurement Demo}
      * 
@@ -83,12 +87,18 @@ define([
         this._measureLabelClassName = defaultValue(options.measureLabelClassName, 'plc-line-measure-label');
         this._measureLabelVClassName = defaultValue(options.measureLabelVClassName, 'plc-line-measure-vlabel');
         this._measureLabelHClassName = defaultValue(options.measureLabelHClassName, 'plc-line-measure-hlabel');
+        this._drawingLineColor = defined(options.drawingLineColor) ? options.drawingLineColor : Color.HOTPINK;
+        this._paintedLineColor = defined(options.paintedLineColor) ? options.paintedLineColor : Color.MEDIUMTURQUOISE;
+        this._verticalLineColor = defined(options.verticalLineColor) ? options.verticalLineColor : Color.YELLOW;
+        this._horizontalLineColor = defined(options.horizontalLineColor) ? options.horizontalLineColor : Color.RED;
+
 
         this._vhMeasure = defaultValue(options.vhMeasure, false);
         this._geoDistanceCameraHeight = defaultValue(options.geoDistenceCameraHeight, 400000.0);
 
         var that = this;
         this._drawingLine = this._viewer.entities.add({
+            name: 'PLC-LINE-MEASURE-DRAWING-LINE',
             polyline: {
                 positions: new CallbackProperty(function () {
                     if (that._status.isStarted) {
@@ -96,11 +106,12 @@ define([
                     }
                 }, false),
                 width: 5,
-                material: Color.HOTPINK
+                material: that._drawingLineColor
             }
         });
         this._drawHandler = new ScreenSpaceEventHandler(this._viewer.canvas);
         this._drawingLable = this._labelCollection.add({
+            name: 'PLC-LINE-MEASURE-DRAWING-LABEL',
             position: this._status.endCartesian3,
             text: this._status.currentLength + ' m',
             show: false,
@@ -224,17 +235,19 @@ define([
         }
 
         var hLine = tool._viewer.entities.add({
+            name: 'plc-line-measure-painted-h-' + tool.paintedLines.length,
             polyline: {
                 positions: [hLow, vLow],
                 width: 5,
-                material: Color.RED
+                material: tool._horizontalLineColor
             }
         });
         var vLine = tool._viewer.entities.add({
+            name: 'plc-line-measure-painted-v-' + tool.paintedLines.length,
             polyline: {
                 positions: [vLow, vUp],
                 width: 5,
-                material: Color.YELLOW
+                material: tool._verticalLineColor
             }
         });
 
@@ -250,12 +263,14 @@ define([
         }
 
         var hLabel = tool._labelCollection.add({
+            name: 'plc-line-measure-painted-h-' + tool.paintedLines.length,
             position: hMiddle,
             text: getLengthString(hLength),
             className: tool._measureLabelHClassName
         });
 
         var vLabel = tool._labelCollection.add({
+            name: 'plc-line-measure-painted-v-' + tool.paintedLines.length,
             position: vMiddle,
             text: getLengthString(vLength),
             className: tool._measureLabelVClassName
@@ -276,6 +291,7 @@ define([
         tool._currentLine.polyline.positions = [tool._status.startCartesian3, tool._status.endCartesian3];
 
         var label = tool._labelCollection.add({
+            name: 'plc-line-measure-painted-' + tool.paintedLines.length,
             position: tool._status.middleCartesian3,
             text: getLengthString(tool._status.currentLength),
             className: tool._measureLabelClassName
@@ -311,10 +327,11 @@ define([
         tool._drawingLable.show = true;
         tool._drawingLable.position = tool._status.endCartesian3;
         tool._currentLine = tool._viewer.entities.add({
+            name: 'plc-line-measure-painted-' + tool.paintedLines.length,
             polyline: {
                 positions: [tool._status.startCartesian3, tool._status.endCartesian3],
                 width: 5,
-                material: Color.MEDIUMTURQUOISE,
+                material: tool._paintedLineColor
             }
         });
         tool._labelCollection.remove(tool._drawingLable);
