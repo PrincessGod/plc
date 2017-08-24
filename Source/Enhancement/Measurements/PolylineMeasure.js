@@ -61,11 +61,11 @@ define([
         }
         //>>includeEnd('debug');
 
-
         this._viewer = options.viewer;
         this._scene = options.viewer.scene;
         this._labelCollection = defined(options.labelCollection) ? options.labelCollection : options.viewer.domLabels;
         this._paintedPolylines = [];
+        this._isActive = false;
         this._geoDistanceCameraHeight = defaultValue(options.geoDistanceCameraHeight, 400000.0);
         this._drawHandler = new ScreenSpaceEventHandler(this._viewer.canvas);
         this._showFragLength = defaultValue(options.showFragLength, false);
@@ -239,6 +239,21 @@ define([
         linePainted: {
             get: function () {
                 return this._linePainted;
+            }
+        },
+
+        /**
+         * Gets the tool is active or not. When call {@link PolylineMeasure#startDraw} will set it to true,
+         * call {@link PolylineMeasure#endDraw} set to false.
+         * 
+         * @memberof PolylineMeasure.prototype
+         * @type {Boolean}
+         * @default false
+         * @readonly
+         */
+        isActive: {
+            get: function () {
+                return this._isActive;
             }
         }
     });
@@ -432,6 +447,7 @@ define([
             this._drawHandler.destroy();
         }
         this._drawHandler = new ScreenSpaceEventHandler(this._viewer.canvas);
+        this._isActive = true;
 
         var that = this;
         this._drawHandler.setInputAction(function (movement) {
@@ -461,7 +477,29 @@ define([
             }
 
             resetStatus(this);
+            this._isActive = false;
         }
+    };
+
+    /**
+     * Clear the painted polyline entities and labels. Make sure the {@link PolylineMeasure#isActive} is false when call it.
+     * 
+     * @exception {DeveloperError} Try clear history when PolylineMeasure tool is active.
+     */
+    PolylineMeasure.prototype.clearHistory = function () {
+        //>>includeStart('debug', pragmas.debug);
+        if (this._isActive) {
+            throw new DeveloperError('Try clear history when PolylineMeasure tool is active.');
+        }
+        //>>includeEnd('debug');
+
+        var entities = this._viewer.entities;
+        for (var index = 0; index < this._paintedPolylines.length; index++) {
+            var polyline = this._paintedPolylines[index];
+            entities.remove(polyline.line);
+            this._labelCollection.remove(polyline.label);
+        }
+        this._paintedPolylines = [];
     };
 
     return PolylineMeasure;

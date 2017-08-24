@@ -69,6 +69,7 @@ define([
         this._labelCollection = defined(options.labelCollection) ? options.labelCollection : options.viewer.domLabels;
         this._drawHandler = new ScreenSpaceEventHandler(this._viewer.canvas);
         this._paintedPolygons = [];
+        this._isActive = false;
         this._areaLabelClassName = defaultValue(options.areaLabelClassName, 'plc-polygon-area-label');
         this._surfaceAreaLabelClassName = defaultValue(options.surfaceAreaLabelClassName, 'plc-polygon-surface-area-label');
         this._showSurface = defaultValue(options.showSurface, false);
@@ -250,6 +251,21 @@ define([
         polygonPainted: {
             get: function () {
                 return this._polygonPainted;
+            }
+        },
+
+        /**
+         * Gets the tool is active or not. When call {@link PolygonMeasure#startDraw} will set it to true,
+         * call {@link PolygonMeasure#endDraw} set to false.
+         * 
+         * @memberof PolygonMeasure.prototype
+         * @type {Boolean}
+         * @default false
+         * @readonly
+         */
+        isActive: {
+            get: function () {
+                return this._isActive;
             }
         }
     });
@@ -533,6 +549,7 @@ define([
     PolygonMeasure.prototype.startDraw = function () {
         renewHandler(this);
         setHandler(this);
+        this._isActive = true;
     };
 
     /**
@@ -542,7 +559,28 @@ define([
     PolygonMeasure.prototype.endDraw = function () {
         destroyHandler(this._drawHandler);
         resetStatus(this._status);
+        this._isActive = false;
     };
 
+    /**
+     * Clear the painted polygon entities and labels. Make sure the {@link PolygonMeasure#isActive} is false when call it.
+     * 
+     * @exception {DeveloperError} Try clear history when PolygonMeasure tool is active.
+     */
+    PolygonMeasure.prototype.clearHistory = function () {
+        //>>includeStart('debug', pragmas.debug);
+        if (this._isActive) {
+            throw new DeveloperError('Try clear history when PolygonMeasure tool is active.');
+        }
+        //>>includeEnd('debug');
+
+        var entities = this._viewer.entities;
+        for (var index = 0; index < this._paintedPolygons.length; index++) {
+            var polygon = this._paintedPolygons[index];
+            entities.remove(polygon.polygon);
+            this._labelCollection.remove(polygon.label);
+        }
+        this._paintedPolygons = [];
+    };
     return PolygonMeasure;
 });

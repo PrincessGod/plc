@@ -85,6 +85,7 @@ define([
         this._scene = this._viewer.scene;
         this._status = status;
         this._paintedLines = [];
+        this._isActive = false;
         this._drawingLabelClassName = defaultValue(options.drawingLabelClassName, 'plc-line-mesaure-drawing-label');
         this._measureLabelClassName = defaultValue(options.measureLabelClassName, 'plc-line-measure-label');
         this._measureLabelVClassName = defaultValue(options.measureLabelVClassName, 'plc-line-measure-vlabel');
@@ -240,6 +241,21 @@ define([
         linePainted: {
             get: function () {
                 return this._linePainted;
+            }
+        },
+
+        /**
+         * Gets the tool is active or not. When call {@link LineMeasure#startDraw} will set it to true,
+         * call {@link LineMeasure#endDraw} set to false.
+         * 
+         * @memberof LineMeasure.prototype
+         * @type {Boolean}
+         * @default false
+         * @readonly
+         */
+        isActive: {
+            get: function () {
+                return this._isActive;
             }
         }
     });
@@ -473,6 +489,7 @@ define([
             this._drawHandler.destroy();
         }
         this._drawHandler = new ScreenSpaceEventHandler(this._viewer.canvas);
+        this._isActive = true;
 
         var that = this;
         this._drawHandler.setInputAction(function (movement) {
@@ -494,7 +511,29 @@ define([
             this._drawHandler.destroy();
             this._drawingLable.show = false;
             this._status.isStarted = false;
+            this._isActive = false;
         }
+    };
+
+    /**
+     * Clear the painted line entities and labels. Make sure the {@link LineMeasure#isActive} is false when call it.
+     * 
+     * @exception {DeveloperError} Try clear history when LineMeasure tool is active.
+     */
+    LineMeasure.prototype.clearHistory = function () {
+        //>>includeStart('debug', pragmas.debug);
+        if (this._isActive) {
+            throw new DeveloperError('Try clear history when LineMeasure tool is active.');
+        }
+        //>>includeEnd('debug');
+
+        var entities = this._viewer.entities;
+        for (var index = 0; index < this._paintedLines.length; index++) {
+            var line = this._paintedLines[index];
+            entities.remove(line.line);
+            this._labelCollection.remove(line.label);
+        }
+        this._paintedLines = [];
     };
 
     return LineMeasure;
