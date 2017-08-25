@@ -34,66 +34,32 @@ require(['plc'], function () {
 
     var compass = new Cesium.PLC.CompassButton(viewer._toolbar, viewer.scene);
 
-    var lineMeasure = new Cesium.PLC.LineMeasure({
-        viewer: viewer
-    });
-    var polylineMeasure = new Cesium.PLC.PolylineMeasure({
-        viewer: viewer
-    });
-    var polygonMeasure = new Cesium.PLC.PolygonMeasure({
-        viewer: viewer
-    });
-
-
-    function goHome() {
-        viewer.camera.setView({
-            destination: new Cesium.Cartesian3(-2378169.0658539943, 4457736.679267226, 3884743.8028813666),
-            orientation: {
-                heading: 0.0,
-                pitch: Cesium.Math.toRadians(-90),
-                roll: 0.0
-            }
-        });
-    }
-
-    goHome();
-
-    var currentMeaure;
-
-    function switchCurrentTool(tool) {
-        if (currentMeaure && currentMeaure !== tool) {
-            currentMeaure.endDraw();
-        }
-
-        currentMeaure = tool;
-    }
+    var measureTool = new Cesium.PLC.MeasureToolManager({viewer: viewer});
 
     Sandcastle.addToolbarButton('Line Measure', function () {
-        switchCurrentTool(lineMeasure);
-        currentMeaure.startDraw();
+        measureTool.startDraw(Cesium.PLC.MeasureMode.LINE);
     }, 'toolbarbuttons');
     Sandcastle.addToolbarButton('Polyline Measure', function () {
-        switchCurrentTool(polylineMeasure);
-        currentMeaure.startDraw();
+        measureTool.startDraw(Cesium.PLC.MeasureMode.POLYLINE);
     }, 'toolbarbuttons');
     Sandcastle.addToolbarButton('Polygon Measure', function () {
-        switchCurrentTool(polygonMeasure);
-        currentMeaure.startDraw();
+        measureTool.startDraw(Cesium.PLC.MeasureMode.POLYGON);
     }, 'toolbarbuttons');
     Sandcastle.addToolbarButton('End Measure', function () {
-        if(currentMeaure) {
-            currentMeaure.endDraw();
-        }
+        measureTool.endDraw();
     }, 'toolbarbuttons');
 
     Sandcastle.addToggleButton('ShowVH', false, function (checked) {
-        lineMeasure.vhMeasure = checked;
+        measureTool.lineTool.vhMeasure = checked;
     }, 'toolbartogglebuttons');
     Sandcastle.addToggleButton('ShowFragLength', false, function (checked) {
-        polylineMeasure.showFragLength = checked;
+        measureTool.polylineTool.showFragLength = checked;
     }, 'toolbartogglebuttons');
     Sandcastle.addToggleButton('ShowSurfaceArea', false, function (checked) {
-        polygonMeasure.showSurface = checked;
+        measureTool.polygonTool.showSurface = checked;
+    }, 'toolbartogglebuttons');
+    Sandcastle.addToolbarButton('Clear', function () {
+        measureTool.clearAllHistory();
     }, 'toolbartogglebuttons');
 
     var lastEntity = {};
@@ -149,6 +115,19 @@ require(['plc'], function () {
             createModel('./models/CesiumMan/Cesium_Man.glb', 0);
         }
     }];
+
+    function goHome() {
+        viewer.camera.setView({
+            destination: new Cesium.Cartesian3(-2378169.0658539943, 4457736.679267226, 3884743.8028813666),
+            orientation: {
+                heading: 0.0,
+                pitch: Cesium.Math.toRadians(-90),
+                roll: 0.0
+            }
+        });
+    }
+
+    goHome();
 
     Sandcastle.addToolbarMenu(options, 'toolbarmenu');
     Sandcastle.addToolbarButton('Home', goHome, 'toolbarmenu');
