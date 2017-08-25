@@ -8,7 +8,9 @@ define([
     '../Enhancement/DataSources/DOMLabelCollection',
     '../Enhancement/Measurements/LineMeasure',
     '../Enhancement/Measurements/PolylineMeasure',
-    '../Enhancement/Measurements/PolygonMeasure'
+    '../Enhancement/Measurements/PolygonMeasure',
+    '../Enhancement/Measurements/MeasureMode',
+    '../Enhancement/Measurements/MeasureToolManager'
 ], function (
     Cesium,
     CompassButton,
@@ -19,7 +21,9 @@ define([
     DOMLabelCollection,
     LineMeasure,
     PolylineMeasure,
-    PolygonMeasure) {
+    PolygonMeasure,
+    MeasureMode,
+    MeasureToolManager) {
     'use strict';
     //>>includeStart('debug', pragmas.debug);
     console.log('%c Almond Debug ' + '%cOn ', 'background: #222; color: #bada55', 'background: #222;color: #3a3');
@@ -47,6 +51,8 @@ define([
     plc['LineMeasure'] = LineMeasure;
     plc['PolylineMeasure'] = PolylineMeasure;
     plc['PolygonMeasure'] = PolygonMeasure;
+    plc['MeasureMode'] = MeasureMode;
+    plc['MeasureToolManager'] = MeasureToolManager;
     Cesium.PLC = plc;
     return Cesium;
 });
