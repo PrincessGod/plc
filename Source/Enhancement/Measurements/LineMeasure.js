@@ -32,6 +32,7 @@ define([
 
     /**
      * A line distance measure tool, provide distance between two picked points and draw the line.
+     * This constructor should not be used directly, instead create tool by create {@link MeasureToolManager}.
      * 
      * @alias LineMeasure
      * @constructor
@@ -56,7 +57,7 @@ define([
      * @see DOMLabel
      * @see DOMLabelCollection
      */
-    function LineMeasure(options) {
+    function LineMeasure(options, dataSource) {
         //>>includeStart('debug', pragmas.debug);
         if (!defined(options)) {
             throw new DeveloperError('options is required');
@@ -83,6 +84,7 @@ define([
         this._viewer = options.viewer;
         this._labelCollection = defaultValue(options.labelCollection, options.viewer.domLabels);
         this._scene = this._viewer.scene;
+        this._dataSource = dataSource;
         this._status = status;
         this._paintedLines = [];
         this._isActive = false;
@@ -101,7 +103,7 @@ define([
         this._linePainted = new Event();
 
         var that = this;
-        this._drawingLine = this._viewer.entities.add({
+        this._drawingLine = this._dataSource.entities.add({
             name: 'PLC-LINE-MEASURE-DRAWING-LINE',
             polyline: {
                 positions: new CallbackProperty(function () {
@@ -292,7 +294,7 @@ define([
             vUp = Cartesian3.fromRadians(startCartographic.longitude, startCartographic.latitude, maxHeight);
         }
 
-        var hLine = tool._viewer.entities.add({
+        var hLine = tool._dataSource.entities.add({
             name: 'plc-line-measure-painted-h-' + (tool.paintedLines.length - 1),
             polyline: {
                 positions: [hLow, vLow],
@@ -300,7 +302,7 @@ define([
                 material: tool._horizontalLineColor
             }
         });
-        var vLine = tool._viewer.entities.add({
+        var vLine = tool._dataSource.entities.add({
             name: 'plc-line-measure-painted-v-' + (tool.paintedLines.length - 1),
             polyline: {
                 positions: [vLow, vUp],
@@ -394,7 +396,7 @@ define([
         tool._status.isStarted = true;
         tool._drawingLable.show = true;
         tool._drawingLable.position = tool._status.endCartesian3;
-        tool._currentLine = tool._viewer.entities.add({
+        tool._currentLine = tool._dataSource.entities.add({
             name: 'plc-line-measure-painted-' + tool.paintedLines.length,
             polyline: {
                 positions: [tool._status.startCartesian3, tool._status.endCartesian3],
@@ -428,7 +430,7 @@ define([
     function setForCancel(tool) {
         tool._status.isStarted = false;
         tool._drawingLable.show = false;
-        tool._viewer.entities.remove(tool._currentLine);
+        tool._dataSource.entities.remove(tool._currentLine);
     }
 
     var pickPositionScratch = {};
@@ -527,7 +529,7 @@ define([
         }
         //>>includeEnd('debug');
 
-        var entities = this._viewer.entities;
+        var entities = this._dataSource.entities;
         for (var index = 0; index < this._paintedLines.length; index++) {
             var line = this._paintedLines[index];
             entities.remove(line.line);

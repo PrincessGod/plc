@@ -32,6 +32,7 @@ define([
 
     /**
      * A tool can measure polyline's length, draw line and length label after finshed.
+     * This constructor should not be used directly, instead create tool by create {@link MeasureToolManager}.
      * 
      * @alias PolylineMeasure
      * @constructor
@@ -52,7 +53,7 @@ define([
      * @see DOMLabel
      * @see DOMLabelCollection
      */
-    function PolylineMeasure(options) {
+    function PolylineMeasure(options, dataSource) {
         //>>includeStart('debug', pragmas.debug);
         Check.defined('options', options);
         Check.defined('options.viewer', options.viewer);
@@ -63,6 +64,7 @@ define([
 
         this._viewer = options.viewer;
         this._scene = options.viewer.scene;
+        this._dataSource = dataSource;
         this._labelCollection = defined(options.labelCollection) ? options.labelCollection : options.viewer.domLabels;
         this._paintedPolylines = [];
         this._isActive = false;
@@ -92,7 +94,7 @@ define([
         this._status = status;
 
         var that = this;
-        this._drawingPolyline = viewer.entities.add({
+        this._drawingPolyline = this._dataSource.entities.add({
             name: 'PLC-POLYLINE-MEASURE-DRAWING-LINE',
             polyline: {
                 positions: new CallbackProperty(function () {
@@ -349,7 +351,7 @@ define([
         tool._status.isStarted = true;
         tool._drawingLabel.show = true;
         tool._drawingLabel.position = tool._status.endCartesian3;
-        tool._currentPolyline = tool._viewer.entities.add({
+        tool._currentPolyline = tool._dataSource.entities.add({
             name: 'plc-polyline-measure-painte-' + tool._paintedPolylines.length,
             polyline: {
                 positions: [tool._status.startCartesian3, tool._status.endCartesian3],
@@ -375,7 +377,7 @@ define([
         if (tool._status.pointsCartesian3.length > 1) {
             paintPolyline(tool);
         } else {
-            tool._viewer.entities.remove(tool._currentPolyline);
+            tool._dataSource.entities.remove(tool._currentPolyline);
         }
         resetStatus(tool);
     }
@@ -493,7 +495,7 @@ define([
         }
         //>>includeEnd('debug');
 
-        var entities = this._viewer.entities;
+        var entities = this._dataSource.entities;
         for (var index = 0; index < this._paintedPolylines.length; index++) {
             var polyline = this._paintedPolylines[index];
             entities.remove(polyline.line);

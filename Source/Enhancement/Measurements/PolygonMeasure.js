@@ -32,6 +32,7 @@ define([
 
     /**
      * A ploygon area measurement tool, can measure ploygon area and the ground cover area(surface area).
+     * This constructor should not be used directly, instead create tool by create {@link MeasureToolManager}.
      * 
      * @alias PolygonMeasure
      * @constructor
@@ -56,7 +57,7 @@ define([
      * @see DOMLabelCollection
      * 
      */
-    function PolygonMeasure(options) {
+    function PolygonMeasure(options, dataSource) {
         //>>includeStart('debug', pragmas.debug);
         Check.defined('options', options);
         Check.defined('options.viewer', options.viewer);
@@ -67,6 +68,7 @@ define([
 
         this._viewer = options.viewer;
         this._scene = options.viewer.scene;
+        this._dataSource = dataSource;
         this._labelCollection = defined(options.labelCollection) ? options.labelCollection : options.viewer.domLabels;
         this._drawHandler = new ScreenSpaceEventHandler(this._viewer.canvas);
         this._paintedPolygons = [];
@@ -93,7 +95,7 @@ define([
         };
 
         var that = this;
-        this._drawingSurface = options.viewer.entities.add({
+        this._drawingSurface = this._dataSource.entities.add({
             name: 'PLC_POLYGON_MEASURE_SURFACE',
             polygon: {
                 hierarchy: new CallbackProperty(function () {
@@ -109,7 +111,7 @@ define([
             }
         });
 
-        this._drawingPolygon = options.viewer.entities.add({
+        this._drawingPolygon = this._dataSource.entities.add({
             name: 'PLC_POLYGON_MEASURE_POLYGON',
             polygon: {
                 hierarchy: new CallbackProperty(function () {
@@ -122,7 +124,7 @@ define([
             }
         });
 
-        this._drawingPolyline = options.viewer.entities.add({
+        this._drawingPolyline = this._dataSource.entities.add({
             name: 'PLC_POLYGON_MEASURE_POLYLINE',
             polyline: {
                 positions: new CallbackProperty(function () {
@@ -293,14 +295,14 @@ define([
             var vector3 = hierarchy[indices[i + 2]];
 
             // These vectors define the sides of a parallelogram (double the size of the triangle)
-            var vectorC = Cesium.Cartesian3.subtract(vector2, vector1, new Cesium.Cartesian3());
-            var vectorD = Cesium.Cartesian3.subtract(vector3, vector1, new Cesium.Cartesian3());
+            var vectorC = Cartesian3.subtract(vector2, vector1, new Cartesian3());
+            var vectorD = Cartesian3.subtract(vector3, vector1, new Cartesian3());
 
             // Area of parallelogram is the cross product of the vectors defining its sides
-            var areaVector = Cesium.Cartesian3.cross(vectorC, vectorD, new Cesium.Cartesian3());
+            var areaVector = Cartesian3.cross(vectorC, vectorD, new Cartesian3());
 
             // Area of the triangle is just half the area of the parallelogram, add it to the sum.
-            area += Cesium.Cartesian3.magnitude(areaVector) / 2.0;
+            area += Cartesian3.magnitude(areaVector) / 2.0;
         }
 
         return area;
@@ -378,7 +380,7 @@ define([
     }
 
     function paintSurface(tool) {
-        var surface = tool._currentPolyline = tool._viewer.entities.add({
+        var surface = tool._currentPolyline = tool._dataSource.entities.add({
             name: 'plc-polygon-measure-surface-' + tool._paintedPolygons.length,
             polygon: {
                 hierarchy: tool._status.pointsSurface,
@@ -408,7 +410,7 @@ define([
     }
 
     function paintePolygon(tool) {
-        var polygon = tool._currentPolyline = tool._viewer.entities.add({
+        var polygon = tool._currentPolyline = tool._dataSource.entities.add({
             name: 'plc-polygon-measure-painted-' + tool._paintedPolygons.length,
             polygon: {
                 hierarchy: tool._status.pointsCartesian3,
@@ -575,7 +577,7 @@ define([
         }
         //>>includeEnd('debug');
 
-        var entities = this._viewer.entities;
+        var entities = this._dataSource.entities;
         for (var index = 0; index < this._paintedPolygons.length; index++) {
             var polygon = this._paintedPolygons[index];
             entities.remove(polygon.polygon);

@@ -6,7 +6,9 @@ define([
     '../../Core/Check',
     '../../Core/defineProperties',
     '../../Core/DeveloperError',
-    './MeasureMode'
+    './MeasureMode',
+    '../../DataSources/CustomDataSource',
+    '../../Core/defaultValue'
 ], function (
     LineMeasure,
     PolylineMeasure,
@@ -15,7 +17,9 @@ define([
     Check,
     defineProperties,
     DeveloperError,
-    MeasureMode) {
+    MeasureMode,
+    CustomDataSource,
+    defaultValue) {
     'use strict';
 
     /**
@@ -52,39 +56,41 @@ define([
         }
         //>>includeEnd('debug');
 
-        if (defined(options.line)) {
-            if (!defined(options.line.viewer) && defined(options.viewer)) {
-                options.line.viewer = options.viewer;
-            }
-            this._lineTool = new LineMeasure(options.line);
-        } else if (defined(options.viewer)) {
-            this._lineTool = new LineMeasure({
-                viewer: options.viewer
-            });
+        this._dataSource = new CustomDataSource('PLCMeasureTools');
+
+        var viewer = {};
+
+        if (defined(options.viewer)) {
+            viewer = options.viewer;
+        } else if (defined(options.line.viewer)) {
+            viewer = options.line.viewer;
+        } else if (defined(options.polyline.viewer)) {
+            viewer = options.polyline.viewer;
+        } else if (defined(options.polygon.viewer)) {
+            viewer = options.polygon.viewer;
         }
 
-        if (defined(options.polyline)) {
-            if (!defined(options.polyline.viewer) && defined(options.viewer)) {
-                options.polyline.viewer = options.viewer;
-            }
-            this._polylineTool = new PolylineMeasure(options.polyline);
-        } else if (defined(options.viewer)) {
-            this._polylineTool = new PolylineMeasure({
-                viewer: options.viewer
-            });
+        viewer.dataSources.add(this._dataSource);
+
+        if (defined(options.line) || defined(options.viewer)) {
+            options.line = defaultValue(options.line, {});
+            options.line.viewer = viewer;
+            this._lineTool = new LineMeasure(options.line, this._dataSource);
         }
 
-        if (defined(options.polygon)) {
-            if (!defined(options.polygon.viewer) && defined(options.viewer)) {
-                options.polygon.viewer = options.viewer;
-            }
-            this._polygonTool = new PolygonMeasure(options.polygon);
-        } else if (defined(options.viewer)) {
-            this._polygonTool = new PolygonMeasure({
-                viewer: options.viewer
-            });
+        if (defined(options.polyline) || defined(options.viewer)) {
+            options.polyline = defaultValue(options.polyline, {});
+            options.polyline.viewer = options.viewer;
+            this._polylineTool = new PolylineMeasure(options.polyline, this._dataSource);
         }
 
+        if (defined(options.polygon) || defined(options.viewer)) {
+            options.polygon = defaultValue(options.polygon, {});
+            options.polygon.viewer = options.viewer;
+            this._polygonTool = new PolygonMeasure(options.polygon, this._dataSource);
+        }
+
+        this._viewer = viewer;
         this._mode = MeasureMode.NONE;
         this._currentTool = undefined;
     }
@@ -273,14 +279,14 @@ define([
      * toolManager.endDraw(true)
      */
     MeasureToolManger.prototype.endDraw = function (clearHistory) {
+        clearHistory = defaultValue(clearHistory, false);
         //>>includeStart('debug', pragmas.debug);
-        Check.typeOf.bool('keepTool', clearHistory);
-        //>>includeEnd('debug');
+        Check.typeOf.bool('clearHistory', clearHistory);
 
-        //>>includeStarted('debug', pragmas.debug);
         if (!defined(this._currentTool)) {
             throw new DeveloperError('currentTool is undefinded, make sure tool is banding before call endDraw()');
         }
+        //>>includeEnd('debug');
 
         this._currentTool.endDraw();
 
