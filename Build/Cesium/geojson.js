@@ -9,7 +9,7 @@ require(['plc'], function () {
     //
     document.getElementById('loading-container').style.display = 'none';
 
-    this.viewer = new Cesium.Viewer('cesiumContainer', {
+    var viewer = new Cesium.Viewer('cesiumContainer', {
         // Wedgets
         animation: false,
         timeline: false,
@@ -35,17 +35,17 @@ require(['plc'], function () {
 
     var compass = new Cesium.PLC.CompassButton(viewer._toolbar, viewer.scene);
 
-    loadLines('../../models/test1/color1point.json');
-    loadLines('../../models/test1/color2point.json');
-    loadLines('../../models/test1/color3point.json');
-    loadStations('../../models/test1/trains.json');
+    loadLines('./models/test1/color1point.json');
+    loadLines('./models/test1/color2point.json');
+    loadLines('./models/test1/color3point.json');
+    loadStations('./models/test1/trains.json');
 
     var isLoaded = false;
     Sandcastle.addToolbarButton('Load Detile', function () {
         if (isLoaded) {
             return;
         }
-        loadMileStone('../../models/test1/test1.json');
+        loadMileStone('./models/test1/test1.json');
         isLoaded = true;
     }, 'toolbarbuttons');
 
@@ -76,8 +76,7 @@ require(['plc'], function () {
 
         promise.then(function (dataSource) {
             viewer.dataSources.add(dataSource);
-            window.entities = dataSource.entities.values;
-            window.collection = new Cesium.EntityCollection();
+            var entities = dataSource.entities.values;
 
             for (var i = 0; i < entities.length; i++) {
                 var entity = entities[i];
@@ -92,7 +91,7 @@ require(['plc'], function () {
                     scaleByDistance: new Cesium.NearFarScalar(1.5e2, 1.0, 4.0e6, 0.0),
                 };
                 entity.billboard = {
-                    image: '../models/test1/trainstation.png',
+                    image: './models/test1/trainstation.png',
                     scaleByDistance: new Cesium.NearFarScalar(1.5e2, 0.08, 4.0e6, 0.0),
                 };
             }
@@ -106,8 +105,7 @@ require(['plc'], function () {
 
         promise.then(function (dataSource) {
             viewer.dataSources.add(dataSource);
-            window.entities = dataSource.entities.values;
-            window.collection = new Cesium.EntityCollection();
+            var entities = dataSource.entities.values;
 
             for (var i = 0; i < entities.length; i++) {
                 var entity = entities[i];
@@ -149,4 +147,8 @@ require(['plc'], function () {
             viewer.trackedEntity = undefined;
         }
     }, Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
+
+    viewer.camera.setView({
+        destination: new Cesium.Cartesian3(-2724637.45253876, 5370570.762067107, 4276185.009626301)
+    });
 });
