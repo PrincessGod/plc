@@ -11,8 +11,6 @@ const del = require('del');
 const requirejs = require('requirejs');
 const Promise = require('bluebird');
 const globby = require('globby');
-const gulpInsert = require('gulp-insert');
-const rimraf = require('rimraf');
 
 const packageJson = require('./package.json');
 

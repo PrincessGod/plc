@@ -54,6 +54,7 @@ define([
      * 
      * @see DOMLabel
      * @see DOMLabelCollection
+     * 
      */
     function PolygonMeasure(options) {
         //>>includeStart('debug', pragmas.debug);
@@ -327,7 +328,7 @@ define([
         return Cartesian3.fromRadians(
             (maxPoint.longitude + minPoint.longitude) / 2,
             (maxPoint.latitude + minPoint.latitude) / 2,
-            (maxPoint.height + minPoint.height) / 2,
+            (maxPoint.height + minPoint.height) / 2
         );
     }
 
@@ -582,5 +583,6 @@ define([
         }
         this._paintedPolygons = [];
     };
+
     return PolygonMeasure;
 });
