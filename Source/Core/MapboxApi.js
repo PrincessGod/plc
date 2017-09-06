@@ -34,7 +34,7 @@ define([
 
         if (!defined(MapboxApi.defaultAccessToken)) {
             if (!printedMapboxWarning) {
-                console.log(errorString);
+                //console.log(errorString);
                 printedMapboxWarning = true;
             }
             return 'pk.eyJ1IjoiYW5hbHl0aWNhbGdyYXBoaWNzIiwiYSI6ImNpd204Zm4wejAwNzYyeW5uNjYyZmFwdWEifQ.7i-VIZZWX8pd1bTfxIVj9g';

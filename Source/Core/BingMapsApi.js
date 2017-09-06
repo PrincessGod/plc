@@ -38,7 +38,7 @@ define([
 
         if (!defined(BingMapsApi.defaultKey)) {
             if (!printedBingWarning) {
-                console.log(errorString);
+                //console.log(errorString);
                 printedBingWarning = true;
             }
             return 'AihaXS6TtE_olKOVdtkMenAMq1L5nDlnU69mRtNisz1vZavr1HhdqGRNkB2Bcqvs';
