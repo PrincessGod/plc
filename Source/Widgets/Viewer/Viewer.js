@@ -1,97 +1,95 @@
 define([
-    '../../Core/BoundingSphere',
-    '../../Core/Cartesian3',
-    '../../Core/Clock',
-    '../../Core/defaultValue',
-    '../../Core/defined',
-    '../../Core/defineProperties',
-    '../../Core/deprecationWarning',
-    '../../Core/destroyObject',
-    '../../Core/DeveloperError',
-    '../../Core/Event',
-    '../../Core/EventHelper',
-    '../../Core/isArray',
-    '../../Core/Matrix4',
-    '../../Core/Rectangle',
-    '../../Core/ScreenSpaceEventType',
-    '../../DataSources/BoundingSphereState',
-    '../../DataSources/ConstantPositionProperty',
-    '../../DataSources/DataSourceCollection',
-    '../../DataSources/DataSourceDisplay',
-    '../../DataSources/Entity',
-    '../../DataSources/EntityView',
-    '../../DataSources/Property',
-    '../../Scene/ImageryLayer',
-    '../../Scene/SceneMode',
-    '../../ThirdParty/knockout',
-    '../../ThirdParty/when',
-    '../Animation/Animation',
-    '../Animation/AnimationViewModel',
-    '../BaseLayerPicker/BaseLayerPicker',
-    '../BaseLayerPicker/createDefaultImageryProviderViewModels',
-    '../BaseLayerPicker/createDefaultTerrainProviderViewModels',
-    '../CesiumWidget/CesiumWidget',
-    '../ClockViewModel',
-    '../FullscreenButton/FullscreenButton',
-    '../Geocoder/Geocoder',
-    '../getElement',
-    '../HomeButton/HomeButton',
-    '../InfoBox/InfoBox',
-    '../NavigationHelpButton/NavigationHelpButton',
-    '../ProjectionPicker/ProjectionPicker',
-    '../SceneModePicker/SceneModePicker',
-    '../SelectionIndicator/SelectionIndicator',
-    '../subscribeAndEvaluate',
-    '../Timeline/Timeline',
-    '../VRButton/VRButton',
-    '../../Enhancement/DataSources/DOMLabelCollection'
-], function(
-    BoundingSphere,
-    Cartesian3,
-    Clock,
-    defaultValue,
-    defined,
-    defineProperties,
-    deprecationWarning,
-    destroyObject,
-    DeveloperError,
-    Event,
-    EventHelper,
-    isArray,
-    Matrix4,
-    Rectangle,
-    ScreenSpaceEventType,
-    BoundingSphereState,
-    ConstantPositionProperty,
-    DataSourceCollection,
-    DataSourceDisplay,
-    Entity,
-    EntityView,
-    Property,
-    ImageryLayer,
-    SceneMode,
-    knockout,
-    when,
-    Animation,
-    AnimationViewModel,
-    BaseLayerPicker,
-    createDefaultImageryProviderViewModels,
-    createDefaultTerrainProviderViewModels,
-    CesiumWidget,
-    ClockViewModel,
-    FullscreenButton,
-    Geocoder,
-    getElement,
-    HomeButton,
-    InfoBox,
-    NavigationHelpButton,
-    ProjectionPicker,
-    SceneModePicker,
-    SelectionIndicator,
-    subscribeAndEvaluate,
-    Timeline,
-    VRButton,
-    DOMLabelCollection) {
+        '../../Core/BoundingSphere',
+        '../../Core/Cartesian3',
+        '../../Core/Clock',
+        '../../Core/defaultValue',
+        '../../Core/defined',
+        '../../Core/defineProperties',
+        '../../Core/destroyObject',
+        '../../Core/DeveloperError',
+        '../../Core/Event',
+        '../../Core/EventHelper',
+        '../../Core/isArray',
+        '../../Core/Matrix4',
+        '../../Core/Rectangle',
+        '../../Core/ScreenSpaceEventType',
+        '../../DataSources/BoundingSphereState',
+        '../../DataSources/ConstantPositionProperty',
+        '../../DataSources/DataSourceCollection',
+        '../../DataSources/DataSourceDisplay',
+        '../../DataSources/Entity',
+        '../../DataSources/EntityView',
+        '../../DataSources/Property',
+        '../../Scene/ImageryLayer',
+        '../../Scene/SceneMode',
+        '../../ThirdParty/knockout',
+        '../../ThirdParty/when',
+        '../Animation/Animation',
+        '../Animation/AnimationViewModel',
+        '../BaseLayerPicker/BaseLayerPicker',
+        '../BaseLayerPicker/createDefaultImageryProviderViewModels',
+        '../BaseLayerPicker/createDefaultTerrainProviderViewModels',
+        '../CesiumWidget/CesiumWidget',
+        '../ClockViewModel',
+        '../FullscreenButton/FullscreenButton',
+        '../Geocoder/Geocoder',
+        '../getElement',
+        '../HomeButton/HomeButton',
+        '../InfoBox/InfoBox',
+        '../NavigationHelpButton/NavigationHelpButton',
+        '../ProjectionPicker/ProjectionPicker',
+        '../SceneModePicker/SceneModePicker',
+        '../SelectionIndicator/SelectionIndicator',
+        '../subscribeAndEvaluate',
+        '../Timeline/Timeline',
+        '../VRButton/VRButton',
+        '../../Enhancement/DataSources/DOMLabelCollection'
+    ], function(
+        BoundingSphere,
+        Cartesian3,
+        Clock,
+        defaultValue,
+        defined,
+        defineProperties,
+        destroyObject,
+        DeveloperError,
+        Event,
+        EventHelper,
+        isArray,
+        Matrix4,
+        Rectangle,
+        ScreenSpaceEventType,
+        BoundingSphereState,
+        ConstantPositionProperty,
+        DataSourceCollection,
+        DataSourceDisplay,
+        Entity,
+        EntityView,
+        Property,
+        ImageryLayer,
+        SceneMode,
+        knockout,
+        when,
+        Animation,
+        AnimationViewModel,
+        BaseLayerPicker,
+        createDefaultImageryProviderViewModels,
+        createDefaultTerrainProviderViewModels,
+        CesiumWidget,
+        ClockViewModel,
+        FullscreenButton,
+        Geocoder,
+        getElement,
+        HomeButton,
+        InfoBox,
+        NavigationHelpButton,
+        ProjectionPicker,
+        SceneModePicker,
+        SelectionIndicator,
+        subscribeAndEvaluate,
+        Timeline,
+        VRButton,
+        DOMLabelCollection) {
     'use strict';
 
     var boundingSphereScratch = new BoundingSphere();
@@ -142,8 +140,8 @@ define([
 
         // Imagery layer feature picking is asynchronous, so put up a message while loading.
         var loadingMessage = new Entity({
-            id: 'Loading...',
-            description: 'Loading feature information...'
+            id : 'Loading...',
+            description : 'Loading feature information...'
         });
 
         when(imageryLayerFeaturePromise, function(features) {
@@ -161,8 +159,8 @@ define([
             var feature = features[0];
 
             var entity = new Entity({
-                id: feature.name,
-                description: feature.description
+                id : feature.name,
+                description : feature.description
             });
 
             if (defined(feature.position)) {
@@ -184,8 +182,8 @@ define([
 
     function createNoFeaturesEntity() {
         return new Entity({
-            id: 'None',
-            description: 'No features found.'
+            id : 'None',
+            description : 'No features found.'
         });
     }
 
@@ -209,13 +207,13 @@ define([
         if (defined(homeButton)) {
             homeButton.container.style.visibility = visibility;
         }
-        if (defined(sceneModePicker)) {
+        if(defined(sceneModePicker)) {
             sceneModePicker.container.style.visibility = visibility;
         }
         if (defined(projectionPicker)) {
             projectionPicker.container.style.visibility = visibility;
         }
-        if (defined(baseLayerPicker)) {
+        if(defined(baseLayerPicker)) {
             baseLayerPicker.container.style.visibility = visibility;
         }
         if (defined(animation)) {
@@ -424,32 +422,32 @@ Either specify options.terrainProvider instead or set options.baseLayerPicker to
             clockViewModel = options.clockViewModel;
             clock = clockViewModel.clock;
         } else {
-            clock = defined(deprecatedClock) ? deprecatedClock : new Clock();
+            clock = new Clock();
             clockViewModel = new ClockViewModel(clock);
             destroyClockViewModel = true;
         }
 
         // Cesium widget
         var cesiumWidget = new CesiumWidget(cesiumWidgetContainer, {
-            terrainProvider: options.terrainProvider,
-            imageryProvider: createBaseLayerPicker ? false : options.imageryProvider,
-            clock: clock,
-            skyBox: options.skyBox,
-            skyAtmosphere: options.skyAtmosphere,
-            sceneMode: options.sceneMode,
-            mapProjection: options.mapProjection,
-            globe: options.globe,
-            orderIndependentTranslucency: options.orderIndependentTranslucency,
-            contextOptions: options.contextOptions,
-            useDefaultRenderLoop: options.useDefaultRenderLoop,
-            targetFrameRate: options.targetFrameRate,
-            showRenderLoopErrors: options.showRenderLoopErrors,
-            creditContainer: defined(options.creditContainer) ? options.creditContainer : bottomContainer,
-            scene3DOnly: scene3DOnly,
-            terrainExaggeration: options.terrainExaggeration,
-            shadows: options.shadows,
-            terrainShadows: options.terrainShadows,
-            mapMode2D: options.mapMode2D
+            terrainProvider : options.terrainProvider,
+            imageryProvider : createBaseLayerPicker ? false : options.imageryProvider,
+            clock : clock,
+            skyBox : options.skyBox,
+            skyAtmosphere : options.skyAtmosphere,
+            sceneMode : options.sceneMode,
+            mapProjection : options.mapProjection,
+            globe : options.globe,
+            orderIndependentTranslucency : options.orderIndependentTranslucency,
+            contextOptions : options.contextOptions,
+            useDefaultRenderLoop : options.useDefaultRenderLoop,
+            targetFrameRate : options.targetFrameRate,
+            showRenderLoopErrors : options.showRenderLoopErrors,
+            creditContainer : defined(options.creditContainer) ? options.creditContainer : bottomContainer,
+            scene3DOnly : scene3DOnly,
+            terrainExaggeration : options.terrainExaggeration,
+            shadows : options.shadows,
+            terrainShadows : options.terrainShadows,
+            mapMode2D : options.mapMode2D
         });
 
         var dataSourceCollection = options.dataSources;
@@ -460,8 +458,8 @@ Either specify options.terrainProvider instead or set options.baseLayerPicker to
         }
 
         var dataSourceDisplay = new DataSourceDisplay({
-            scene: cesiumWidget.scene,
-            dataSourceCollection: dataSourceCollection
+            scene : cesiumWidget.scene,
+            dataSourceCollection : dataSourceCollection
         });
 
         var eventHelper = new EventHelper();
@@ -503,9 +501,9 @@ Either specify options.terrainProvider instead or set options.baseLayerPicker to
             geocoderContainer.className = 'cesium-viewer-geocoderContainer';
             toolbar.appendChild(geocoderContainer);
             geocoder = new Geocoder({
-                container: geocoderContainer,
+                container : geocoderContainer,
                 geocoderServices: defined(options.geocoder) ? (isArray(options.geocoder) ? options.geocoder : [options.geocoder]) : undefined,
-                scene: cesiumWidget.scene
+                scene : cesiumWidget.scene
             });
             // Subscribe to search so that we can clear the trackedEntity when it is clicked.
             eventHelper.add(geocoder.viewModel.search.beforeExecute, Viewer.prototype._clearObjects, this);
@@ -555,11 +553,11 @@ Either specify options.terrainProvider instead or set options.baseLayerPicker to
             var terrainProviderViewModels = defaultValue(options.terrainProviderViewModels, createDefaultTerrainProviderViewModels());
 
             baseLayerPicker = new BaseLayerPicker(toolbar, {
-                globe: cesiumWidget.scene.globe,
-                imageryProviderViewModels: imageryProviderViewModels,
-                selectedImageryProviderViewModel: options.selectedImageryProviderViewModel,
-                terrainProviderViewModels: terrainProviderViewModels,
-                selectedTerrainProviderViewModel: options.selectedTerrainProviderViewModel
+                globe : cesiumWidget.scene.globe,
+                imageryProviderViewModels : imageryProviderViewModels,
+                selectedImageryProviderViewModel : options.selectedImageryProviderViewModel,
+                terrainProviderViewModels : terrainProviderViewModels,
+                selectedTerrainProviderViewModel : options.selectedTerrainProviderViewModel
             });
 
             //Grab the dropdown for resize code.
@@ -586,8 +584,8 @@ Either specify options.terrainProvider instead or set options.baseLayerPicker to
                 //window.localStorage.setItem throws if in Safari private browsing mode or in any browser if we are over quota.
             }
             navigationHelpButton = new NavigationHelpButton({
-                container: toolbar,
-                instructionsInitiallyVisible: defaultValue(options.navigationInstructionsInitiallyVisible, showNavHelp)
+                container : toolbar,
+                instructionsInitiallyVisible : defaultValue(options.navigationInstructionsInitiallyVisible, showNavHelp)
             });
         }
 
@@ -772,8 +770,8 @@ Either specify options.terrainProvider instead or set options.baseLayerPicker to
          * @type {Element}
          * @readonly
          */
-        container: {
-            get: function() {
+        container : {
+            get : function() {
                 return this._container;
             }
         },
@@ -797,8 +795,8 @@ Either specify options.terrainProvider instead or set options.baseLayerPicker to
          * @type {Element}
          * @readonly
          */
-        bottomContainer: {
-            get: function() {
+        bottomContainer : {
+            get : function() {
                 return this._bottomContainer;
             }
         },
@@ -809,8 +807,8 @@ Either specify options.terrainProvider instead or set options.baseLayerPicker to
          * @type {CesiumWidget}
          * @readonly
          */
-        cesiumWidget: {
-            get: function() {
+        cesiumWidget : {
+            get : function() {
                 return this._cesiumWidget;
             }
         },
@@ -821,8 +819,8 @@ Either specify options.terrainProvider instead or set options.baseLayerPicker to
          * @type {SelectionIndicator}
          * @readonly
          */
-        selectionIndicator: {
-            get: function() {
+        selectionIndicator : {
+            get : function() {
                 return this._selectionIndicator;
             }
         },
@@ -833,8 +831,8 @@ Either specify options.terrainProvider instead or set options.baseLayerPicker to
          * @type {InfoBox}
          * @readonly
          */
-        infoBox: {
-            get: function() {
+        infoBox : {
+            get : function() {
                 return this._infoBox;
             }
         },
@@ -845,8 +843,8 @@ Either specify options.terrainProvider instead or set options.baseLayerPicker to
          * @type {Geocoder}
          * @readonly
          */
-        geocoder: {
-            get: function() {
+        geocoder : {
+            get : function() {
                 return this._geocoder;
             }
         },
@@ -857,8 +855,8 @@ Either specify options.terrainProvider instead or set options.baseLayerPicker to
          * @type {HomeButton}
          * @readonly
          */
-        homeButton: {
-            get: function() {
+        homeButton : {
+            get : function() {
                 return this._homeButton;
             }
         },
@@ -869,8 +867,8 @@ Either specify options.terrainProvider instead or set options.baseLayerPicker to
          * @type {SceneModePicker}
          * @readonly
          */
-        sceneModePicker: {
-            get: function() {
+        sceneModePicker : {
+            get : function() {
                 return this._sceneModePicker;
             }
         },
@@ -881,8 +879,8 @@ Either specify options.terrainProvider instead or set options.baseLayerPicker to
          * @type {ProjectionPicker}
          * @readonly
          */
-        projectionPicker: {
-            get: function() {
+        projectionPicker : {
+            get : function() {
                 return this._projectionPicker;
             }
         },
@@ -893,8 +891,8 @@ Either specify options.terrainProvider instead or set options.baseLayerPicker to
          * @type {BaseLayerPicker}
          * @readonly
          */
-        baseLayerPicker: {
-            get: function() {
+        baseLayerPicker : {
+            get : function() {
                 return this._baseLayerPicker;
             }
         },
@@ -905,8 +903,8 @@ Either specify options.terrainProvider instead or set options.baseLayerPicker to
          * @type {NavigationHelpButton}
          * @readonly
          */
-        navigationHelpButton: {
-            get: function() {
+        navigationHelpButton : {
+            get : function() {
                 return this._navigationHelpButton;
             }
         },
@@ -917,8 +915,8 @@ Either specify options.terrainProvider instead or set options.baseLayerPicker to
          * @type {Animation}
          * @readonly
          */
-        animation: {
-            get: function() {
+        animation : {
+            get : function() {
                 return this._animation;
             }
         },
@@ -929,8 +927,8 @@ Either specify options.terrainProvider instead or set options.baseLayerPicker to
          * @type {Timeline}
          * @readonly
          */
-        timeline: {
-            get: function() {
+        timeline : {
+            get : function() {
                 return this._timeline;
             }
         },
@@ -941,8 +939,8 @@ Either specify options.terrainProvider instead or set options.baseLayerPicker to
          * @type {FullscreenButton}
          * @readonly
          */
-        fullscreenButton: {
-            get: function() {
+        fullscreenButton : {
+            get : function() {
                 return this._fullscreenButton;
             }
         },
@@ -953,8 +951,8 @@ Either specify options.terrainProvider instead or set options.baseLayerPicker to
          * @type {VRButton}
          * @readonly
          */
-        vrButton: {
-            get: function() {
+        vrButton : {
+            get : function() {
                 return this._vrButton;
             }
         },
@@ -965,8 +963,8 @@ Either specify options.terrainProvider instead or set options.baseLayerPicker to
          * @type {DataSourceDisplay}
          * @readonly
          */
-        dataSourceDisplay: {
-            get: function() {
+        dataSourceDisplay : {
+            get : function() {
                 return this._dataSourceDisplay;
             }
         },
@@ -990,8 +988,8 @@ Either specify options.terrainProvider instead or set options.baseLayerPicker to
          * @type {EntityCollection}
          * @readonly
          */
-        entities: {
-            get: function() {
+        entities : {
+            get : function() {
                 return this._dataSourceDisplay.defaultDataSource.entities;
             }
         },
@@ -1002,8 +1000,8 @@ Either specify options.terrainProvider instead or set options.baseLayerPicker to
          * @type {DataSourceCollection}
          * @readonly
          */
-        dataSources: {
-            get: function() {
+        dataSources : {
+            get : function() {
                 return this._dataSourceCollection;
             }
         },
@@ -1014,8 +1012,8 @@ Either specify options.terrainProvider instead or set options.baseLayerPicker to
          * @type {Canvas}
          * @readonly
          */
-        canvas: {
-            get: function() {
+        canvas : {
+            get : function() {
                 return this._cesiumWidget.canvas;
             }
         },
@@ -1026,8 +1024,8 @@ Either specify options.terrainProvider instead or set options.baseLayerPicker to
          * @type {Element}
          * @readonly
          */
-        cesiumLogo: {
-            get: function() {
+        cesiumLogo : {
+            get : function() {
                 return this._cesiumWidget.cesiumLogo;
             }
         },
@@ -1038,8 +1036,8 @@ Either specify options.terrainProvider instead or set options.baseLayerPicker to
          * @type {Scene}
          * @readonly
          */
-        scene: {
-            get: function() {
+        scene : {
+            get : function() {
                 return this._cesiumWidget.scene;
             }
         },
@@ -1049,11 +1047,11 @@ Either specify options.terrainProvider instead or set options.baseLayerPicker to
          * @memberof Viewer.prototype
          * @type {Boolean}
          */
-        shadows: {
-            get: function() {
+        shadows : {
+            get : function() {
                 return this.scene.shadowMap.enabled;
             },
-            set: function(value) {
+            set : function(value) {
                 this.scene.shadowMap.enabled = value;
             }
         },
@@ -1063,11 +1061,11 @@ Either specify options.terrainProvider instead or set options.baseLayerPicker to
          * @memberof Viewer.prototype
          * @type {ShadowMode}
          */
-        terrainShadows: {
-            get: function() {
+        terrainShadows : {
+            get : function() {
                 return this.scene.globe.shadows;
             },
-            set: function(value) {
+            set : function(value) {
                 this.scene.globe.shadows = value;
             }
         },
@@ -1078,8 +1076,8 @@ Either specify options.terrainProvider instead or set options.baseLayerPicker to
          * @type {ShadowMap}
          * @readonly
          */
-        shadowMap: {
-            get: function() {
+        shadowMap : {
+            get : function() {
                 return this.scene.shadowMap;
             }
         },
@@ -1091,8 +1089,8 @@ Either specify options.terrainProvider instead or set options.baseLayerPicker to
          * @type {ImageryLayerCollection}
          * @readonly
          */
-        imageryLayers: {
-            get: function() {
+        imageryLayers : {
+            get : function() {
                 return this.scene.imageryLayers;
             }
         },
@@ -1103,11 +1101,11 @@ Either specify options.terrainProvider instead or set options.baseLayerPicker to
          *
          * @type {TerrainProvider}
          */
-        terrainProvider: {
-            get: function() {
+        terrainProvider : {
+            get : function() {
                 return this.scene.terrainProvider;
             },
-            set: function(terrainProvider) {
+            set : function(terrainProvider) {
                 this.scene.terrainProvider = terrainProvider;
             }
         },
@@ -1119,8 +1117,8 @@ Either specify options.terrainProvider instead or set options.baseLayerPicker to
          * @type {Camera}
          * @readonly
          */
-        camera: {
-            get: function() {
+        camera : {
+            get : function() {
                 return this.scene.camera;
             }
         },
@@ -1131,8 +1129,8 @@ Either specify options.terrainProvider instead or set options.baseLayerPicker to
          * @type {Clock}
          * @readonly
          */
-        clock: {
-            get: function() {
+        clock : {
+            get : function() {
                 return this._clockViewModel.clock;
             }
         },
@@ -1143,8 +1141,8 @@ Either specify options.terrainProvider instead or set options.baseLayerPicker to
          * @type {ClockViewModel}
          * @readonly
          */
-        clockViewModel: {
-            get: function() {
+        clockViewModel : {
+            get : function() {
                 return this._clockViewModel;
             }
         },
@@ -1155,8 +1153,8 @@ Either specify options.terrainProvider instead or set options.baseLayerPicker to
          * @type {ScreenSpaceEventHandler}
          * @readonly
          */
-        screenSpaceEventHandler: {
-            get: function() {
+        screenSpaceEventHandler : {
+            get : function() {
                 return this._cesiumWidget.screenSpaceEventHandler;
             }
         },
@@ -1170,11 +1168,11 @@ Either specify options.terrainProvider instead or set options.baseLayerPicker to
          *
          * @type {Number}
          */
-        targetFrameRate: {
-            get: function() {
+        targetFrameRate : {
+            get : function() {
                 return this._cesiumWidget.targetFrameRate;
             },
-            set: function(value) {
+            set : function(value) {
                 this._cesiumWidget.targetFrameRate = value;
             }
         },
@@ -1193,11 +1191,11 @@ Either specify options.terrainProvider instead or set options.baseLayerPicker to
          *
          * @type {Boolean}
          */
-        useDefaultRenderLoop: {
-            get: function() {
+        useDefaultRenderLoop : {
+            get : function() {
                 return this._cesiumWidget.useDefaultRenderLoop;
             },
-            set: function(value) {
+            set : function(value) {
                 this._cesiumWidget.useDefaultRenderLoop = value;
             }
         },
@@ -1214,11 +1212,11 @@ Either specify options.terrainProvider instead or set options.baseLayerPicker to
          * @type {Number}
          * @default 1.0
          */
-        resolutionScale: {
-            get: function() {
+        resolutionScale : {
+            get : function() {
                 return this._cesiumWidget.resolutionScale;
             },
-            set: function(value) {
+            set : function(value) {
                 this._cesiumWidget.resolutionScale = value;
                 this._forceResize = true;
             }
@@ -1234,11 +1232,11 @@ Either specify options.terrainProvider instead or set options.baseLayerPicker to
          *
          * @type {Boolean}
          */
-        allowDataSourcesToSuspendAnimation: {
-            get: function() {
+        allowDataSourcesToSuspendAnimation : {
+            get : function() {
                 return this._allowDataSourcesToSuspendAnimation;
             },
-            set: function(value) {
+            set : function(value) {
                 this._allowDataSourcesToSuspendAnimation = value;
             }
         },
@@ -1248,11 +1246,11 @@ Either specify options.terrainProvider instead or set options.baseLayerPicker to
          * @memberof Viewer.prototype
          * @type {Entity}
          */
-        trackedEntity: {
-            get: function() {
+        trackedEntity : {
+            get : function() {
                 return this._trackedEntity;
             },
-            set: function(value) {
+            set : function(value) {
                 if (this._trackedEntity !== value) {
                     this._trackedEntity = value;
 
@@ -1290,11 +1288,11 @@ Either specify options.terrainProvider instead or set options.baseLayerPicker to
          * @memberof Viewer.prototype
          * @type {Entity}
          */
-        selectedEntity: {
-            get: function() {
+        selectedEntity : {
+            get : function() {
                 return this._selectedEntity;
             },
-            set: function(value) {
+            set : function(value) {
                 if (this._selectedEntity !== value) {
                     this._selectedEntity = value;
                     var selectionIndicatorViewModel = defined(this._selectionIndicator) ? this._selectionIndicator.viewModel : undefined;
@@ -1316,8 +1314,8 @@ Either specify options.terrainProvider instead or set options.baseLayerPicker to
          * @type {Event}
          * @readonly
          */
-        selectedEntityChanged: {
-            get: function() {
+        selectedEntityChanged : {
+            get : function() {
                 return this._selectedEntityChanged;
             }
         },
@@ -1327,8 +1325,8 @@ Either specify options.terrainProvider instead or set options.baseLayerPicker to
          * @type {Event}
          * @readonly
          */
-        trackedEntityChanged: {
-            get: function() {
+        trackedEntityChanged : {
+            get : function() {
                 return this._trackedEntityChanged;
             }
         },
@@ -1337,11 +1335,11 @@ Either specify options.terrainProvider instead or set options.baseLayerPicker to
          * @memberof Viewer.prototype
          * @type {DataSource}
          */
-        clockTrackedDataSource: {
-            get: function() {
+        clockTrackedDataSource : {
+            get : function() {
                 return this._clockTrackedDataSource;
             },
-            set: function(value) {
+            set : function(value) {
                 if (this._clockTrackedDataSource !== value) {
                     this._clockTrackedDataSource = value;
                     trackDataSourceClock(this._timeline, this.clock, value);
@@ -1919,13 +1917,13 @@ Either specify options.terrainProvider instead or set options.baseLayerPicker to
         //If zoomTarget was an ImageryLayer
         if (entities instanceof Rectangle) {
             var options = {
-                destination: entities,
-                duration: zoomOptions.duration,
-                maximumHeight: zoomOptions.maximumHeight,
-                complete: function() {
+                destination : entities,
+                duration : zoomOptions.duration,
+                maximumHeight : zoomOptions.maximumHeight,
+                complete : function() {
                     zoomPromise.resolve(true);
                 },
-                cancel: function() {
+                cancel : function() {
                     zoomPromise.resolve(false);
                 }
             };
@@ -1960,8 +1958,6 @@ Either specify options.terrainProvider instead or set options.baseLayerPicker to
         viewer.trackedEntity = undefined;
 
         var boundingSphere = BoundingSphere.fromBoundingSpheres(boundingSpheres);
-        var controller = scene.screenSpaceCameraController;
-        controller.minimumZoomDistance = Math.min(controller.minimumZoomDistance, boundingSphere.radius * 0.5);
 
         if (!viewer._zoomIsFlight) {
             camera.viewBoundingSphere(boundingSphere, viewer._zoomOptions);
@@ -1971,15 +1967,15 @@ Either specify options.terrainProvider instead or set options.baseLayerPicker to
         } else {
             clearZoom(viewer);
             camera.flyToBoundingSphere(boundingSphere, {
-                duration: zoomOptions.duration,
-                maximumHeight: zoomOptions.maximumHeight,
-                complete: function() {
+                duration : zoomOptions.duration,
+                maximumHeight : zoomOptions.maximumHeight,
+                complete : function() {
                     zoomPromise.resolve(true);
                 },
-                cancel: function() {
+                cancel : function() {
                     zoomPromise.resolve(false);
                 },
-                offset: zoomOptions.offset
+                offset : zoomOptions.offset
             });
         }
     }
