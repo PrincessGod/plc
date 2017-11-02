@@ -52,14 +52,26 @@ require(['plc'], function () {
     });
 
     var handler = new Cesium.ScreenSpaceEventHandler(viewer.canvas);
+    var div = document.getElementById('toolbar');
+    var p = document.createElement('p');
+    div.innerHTML = '';
+    div.appendChild(p);
+    div.style.display = 'none';
+    p.style.color = 'white';
+    p.style.whiteSpace = 'pre';
+    p.style.margin = '6px 10px';
     handler.setInputAction(function() {
         var feature = inspectorViewModel.feature;
         if (Cesium.defined(feature)) {
             var propertyNames = feature.getPropertyNames();
             var length = propertyNames.length;
+            p.textContent = '';
+            div.style.display = 'block';
             for (var i = 0; i < length; ++i) {
                 var propertyName = propertyNames[i];
-                console.log(propertyName + ': ' + feature.getProperty(propertyName));
+                var propertyString = propertyName + ': ' + feature.getProperty(propertyName);
+                console.log(propertyString);
+                p.textContent = p.textContent.concat(propertyString + '\r\n');
             }
         }
     }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
